@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Partículas Interactivo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="info-panel">
+        <h1>🎨 Sistema de Partículas Interactivo</h1>
+        <p><span class="highlight">Mueve el mouse:</span> Las partículas huyen del cursor (repulsión)</p>
+        <p><span class="highlight">Haz clic:</span> Genera nuevas partículas con gravedad</p>
+        <p><span class="highlight">Colisión:</span> Las partículas cambian de color al tocar el cursor</p>
+        <p><span class="highlight">Total:</span> Sistema con múltiples interacciones simultáneas</p>
+    </div>
+
+    <div id="particle-count">Partículas: 0</div>
+
+    <canvas id="canvas"></canvas>
+
+    <div id="controls">
+        <button class="control-btn" id="reset-btn">Reiniciar Sistema</button>
+        <button class="control-btn" id="gravity-btn">Gravedad: ON</button>
+        <button class="control-btn" id="repulsion-btn">Repulsión: ON</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
