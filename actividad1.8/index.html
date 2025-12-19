@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escena 3D Interactiva - Three.js</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+        
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            max-width: 300px;
+            z-index: 10;
+        }
+        
+        #info h1 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #64ffda;
+        }
+        
+        #info p {
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        .label {
+            color: #64ffda;
+            font-weight: bold;
+        }
+        
+        canvas {
+            display: block;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>🎨 Composición 3D</h1>
+        <p><span class="label">Estructura:</span> Sistema planetario abstracto</p>
+        <p><span class="label">Geometrías:</span> Esfera central, torus orbital, icosaedro satélite</p>
+        <p><span class="label">Iluminación:</span> Luz ambiental + direccional + puntual</p>
+        <p><span class="label">Materiales:</span> MeshStandardMaterial con propiedades metálicas</p>
+    </div>
+    
+    <div id="canvas-container"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // ============================================
+        // CONFIGURACIÓN DE LA ESCENA
+        // ============================================
+        
+        // Crear la escena (el universo donde viven los objetos)
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        scene.fog = new THREE.Fog(0x0a0a0a, 10, 50);
+        
+        // ============================================
+        // CONFIGURACIÓN DE LA CÁMARA
+        // ============================================
+        
+        // PerspectiveCamera(fov, aspect, near, far)
+        // fov: 60 grados (campo de visión más cinematográfico que el default de 75)
+        const camera = new THREE.PerspectiveCamera(
+            60,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+        
+        // Posicionar la cámara con distancia en Z y elevación en Y
+        camera.position.set(8, 6, 12);
+        camera.lookAt(0, 0, 0);
+        
+        // ============================================
+        // CONFIGURACIÓN DEL RENDERIZADOR
+        // ============================================
+        
+        const renderer = new THREE.WebGLRenderer({ 
+            antialias: true,
+            alpha: true 
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        
+        // ============================================
+        // ILUMINACIÓN MIXTA
+        // ============================================
+        
+        // 1. Luz Ambiental suave (ilumina todo uniformemente)
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
+        scene.add(ambientLight);
+        
+        // 2. Luz Direccional (simula el sol)
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        directionalLight.position.set(10, 15, 10);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        scene.add(directionalLight);
+        
+        // 3. Luz Puntual (luz de acento colorida)
+        const pointLight = new THREE.PointLight(0x64ffda, 1.5, 30);
+        pointLight.position.set(-5, 5, 5);
+        scene.add(pointLight);
+        
+        // Luz puntual adicional para mejor volumen
+        const pointLight2 = new THREE.PointLight(0xff6b9d, 1.2, 25);
+        pointLight2.position.set(5, -3, -5);
+        scene.add(pointLight2);
+        
+        // ============================================
+        // CONSTRUCCIÓN DE LA ESTRUCTURA COMPUESTA
+        // ============================================
+        
+        // OBJETO 1: Esfera Central (planeta principal)
+        const sphereGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+        const sphereMaterial = new THREE.MeshStandardMaterial({
+            color: 0x64ffda,
+            metalness: 0.7,
+            roughness: 0.3,
+            emissive: 0x0a4040,
+            emissiveIntensity: 0.2
+        });
+        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphere.castShadow = true;
+        sphere.receiveShadow = true;
+        scene.add(sphere);
+        
+        // OBJETO 2: Torus (anillo orbital)
+        const torusGeometry = new THREE.TorusGeometry(3, 0.3, 16, 100);
+        const torusMaterial = new THREE.MeshStandardMaterial({
+            color: 0xff6b9d,
+            metalness: 0.8,
+            roughness: 0.2,
+            emissive: 0x4a0a20,
+            emissiveIntensity: 0.3
+        });
+        const torus = new THREE.Mesh(torusGeometry, torusMaterial);
+        torus.rotation.x = Math.PI / 3;
+        torus.castShadow = true;
+        torus.receiveShadow = true;
+        scene.add(torus);
+        
+        // OBJETO 3: Icosaedro (satélite)
+        const icosahedronGeometry = new THREE.IcosahedronGeometry(0.8, 0);
+        const icosahedronMaterial = new THREE.MeshStandardMaterial({
+            color: 0xffd700,
+            metalness: 0.9,
+            roughness: 0.1,
+            emissive: 0x4a3a00,
+            emissiveIntensity: 0.4
+        });
+        const icosahedron = new THREE.Mesh(icosahedronGeometry, icosahedronMaterial);
+        icosahedron.castShadow = true;
+        scene.add(icosahedron);
+        
+        // OBJETO 4: Dodecaedro (segundo satélite)
+        const dodecahedronGeometry = new THREE.DodecahedronGeometry(0.6, 0);
+        const dodecahedronMaterial = new THREE.MeshPhongMaterial({
+            color: 0x9d64ff,
+            shininess: 100,
+            specular: 0x444444,
+            emissive: 0x2a0a4a,
+            emissiveIntensity: 0.3
+        });
+        const dodecahedron = new THREE.Mesh(dodecahedronGeometry, dodecahedronMaterial);
+        dodecahedron.castShadow = true;
+        scene.add(dodecahedron);
+        
+        // ============================================
+        // SISTEMA DE ANIMACIÓN
+        // ============================================
+        
+        let time = 0;
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            time += 0.01;
+            
+            // Rotación de la esfera central
+            sphere.rotation.y += 0.005;
+            sphere.rotation.x += 0.002;
+            
+            // Rotación del torus orbital
+            torus.rotation.z += 0.01;
+            torus.rotation.y += 0.005;
+            
+            // Movimiento orbital del icosaedro
+            const orbitRadius = 4;
+            icosahedron.position.x = Math.cos(time * 0.8) * orbitRadius;
+            icosahedron.position.z = Math.sin(time * 0.8) * orbitRadius;
+            icosahedron.position.y = Math.sin(time * 1.2) * 1.5;
+            icosahedron.rotation.x += 0.02;
+            icosahedron.rotation.y += 0.03;
+            
+            // Movimiento orbital del dodecaedro (órbita contraria)
+            const orbitRadius2 = 3.5;
+            dodecahedron.position.x = Math.cos(-time * 1.2) * orbitRadius2;
+            dodecahedron.position.z = Math.sin(-time * 1.2) * orbitRadius2;
+            dodecahedron.position.y = Math.cos(time * 1.5) * 2;
+            dodecahedron.rotation.x += 0.03;
+            dodecahedron.rotation.z += 0.02;
+            
+            // Animación sutil de las luces puntuales
+            pointLight.intensity = 1.5 + Math.sin(time * 2) * 0.3;
+            pointLight2.intensity = 1.2 + Math.cos(time * 1.5) * 0.3;
+            
+            // Renderizar la escena
+            renderer.render(scene, camera);
+        }
+        
+        // ============================================
+        // RESPONSIVE DESIGN
+        // ============================================
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Iniciar la animación
+        animate();
+    </script>
+</body>
+</html>
