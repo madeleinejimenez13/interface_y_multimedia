@@ -1,0 +1,40 @@
+<div class="media-panel">
+  <h2>🎵 Reproductor Multimedia</h2>
+
+  <!-- Tiempo -->
+  <div class="time-display">
+    <span class="time">{{ displayTime() }}</span>
+  </div>
+
+  <!-- Controles de reproducción -->
+  <div class="controls">
+    <button (click)="resetTime()">⏮️</button>
+    <button (click)="togglePlay()" class="play-btn">
+      {{ isPlaying() ? '⏸️' : '▶️' }}
+    </button>
+    <button (click)="incrementTime()">⏭️</button>
+  </div>
+
+  <!-- Control de volumen -->
+  <div class="volume-control">
+    <button (click)="toggleMute()" class="mute-btn">
+      {{ volumeIcon() }}
+    </button>
+    <input 
+      type="range" 
+      min="0" 
+      max="100" 
+      [value]="volumen()"
+      (input)="setVolumen($any($event.target).value)"
+    />
+    <span class="volume-value">{{ volumen() }}%</span>
+  </div>
+
+  <!-- Estado actual -->
+  <div class="debug-info">
+    <p><strong>Estado:</strong> {{ isPlaying() ? 'Reproduciendo' : 'Pausado' }}</p>
+    <p><strong>Volumen:</strong> {{ volumen() }}</p>
+    <p><strong>Muteado:</strong> {{ isMuted() ? 'Sí' : 'No' }}</p>
+    <p><strong>Tiempo:</strong> {{ currentTime() }} segundos</p>
+  </div>
+</div>

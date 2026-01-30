@@ -1,0 +1,44 @@
+import { Component, signal, computed, effect } from '@angular/core';
+
+@Component({
+  selector: 'app-media-control-panel',
+  standalone: true,
+  templateUrl: './media-control-panel.component.html',
+})
+export class MediaControlPanelComponent {
+  
+  // ========== 1. SIGNALS BASE (Fuente de la verdad) ==========
+  volumen = signal(50);          // 0-100
+  isPlaying = signal(false);     // true = reproduciendo
+  currentTime = signal(0);       // segundos
+  
+  // ========== 2. COMPUTED (Estado derivado) ==========
+  
+  // TODO: Implementa displayTime - convierte segundos a MM:SS
+  displayTime = computed(() => {
+    // Tu lógica aquí...
+    // Pista: usa Math.floor() y padStart()
+  });
+  
+  // TODO: Implementa volumeIcon - retorna string del icono
+  volumeIcon = computed(() => {
+    // Tu lógica aquí...
+    // Pista: revisa el valor de this.volumen()
+  });
+  
+  // ========== 3. EFFECT (Efectos secundarios) ==========
+  
+  constructor() {
+    // TODO: Crea un effect que guarde el volumen en localStorage
+  }
+  
+  // ========== 4. MÉTODOS ==========
+  
+  togglePlay() {
+    // TODO: Cambia isPlaying de true a false o viceversa
+  }
+  
+  setVolumen(value: number) {
+    // TODO: Actualiza el signal de volumen
+  }
+}
