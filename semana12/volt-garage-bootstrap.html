@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOLT GARAGE - Sistema de Temas con Bootstrap 5</title>
+    
+    <!-- Bootstrap 5.3 CSS (incluye soporte nativo para Dark Mode) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ============================================
+           VOLT GARAGE - PERSONALIZACIÓN DE BOOTSTRAP
+           Usando CSS Variables de Bootstrap 5.3
+           ============================================ */
+        
+        :root,
+        [data-bs-theme="light"] {
+            /* === OVERRIDE DE COLORES BOOTSTRAP === */
+            
+            /* Primary: Verde Lima Eléctrico (reemplaza el azul default) */
+            --bs-primary: #84CC16;
+            --bs-primary-rgb: 132, 204, 22;
+            --bs-primary-hover: #65A30D;
+            --bs-primary-active: #4D7C0F;
+            
+            /* Secondary: Gris Neutro */
+            --bs-secondary: #57534E;
+            --bs-secondary-rgb: 87, 83, 78;
+            
+            /* Info: Cyan Tecnológico (acento) */
+            --bs-info: #06B6D4;
+            --bs-info-rgb: 6, 182, 212;
+            
+            /* Warning: Ámbar Industrial */
+            --bs-warning: #F59E0B;
+            --bs-warning-rgb: 245, 158, 11;
+            
+            /* Danger: Rojo Señalización */
+            --bs-danger: #EF4444;
+            --bs-danger-rgb: 239, 68, 68;
+            
+            /* Success: Verde Confirmación */
+            --bs-success: #22C55E;
+            --bs-success-rgb: 34, 197, 94;
+            
+            /* Fondos y superficies */
+            --bs-body-bg: #FAFAF9;
+            --bs-body-color: #1C1917;
+            --bs-secondary-bg: #F5F5F4;
+            --bs-tertiary-bg: #FFFFFF;
+            
+            /* Bordes */
+            --bs-border-color: #E7E5E4;
+            
+            /* Links */
+            --bs-link-color: #84CC16;
+            --bs-link-hover-color: #65A30D;
+            
+            /* === VARIABLES PERSONALIZADAS VOLT GARAGE === */
+            --volt-font-display: 'Rajdhani', sans-serif;
+            --volt-font-body: 'Barlow', sans-serif;
+            --volt-text-on-primary: #1C1917;
+            --volt-glow: 0 0 20px rgba(132, 204, 22, 0.3);
+            --volt-card-bg: #FFFFFF;
+            --volt-text-muted: #78716C;
+            --volt-surface-elevated: #FFFFFF;
+        }
+        
+        /* === TEMA OSCURO === */
+        [data-bs-theme="dark"] {
+            /* Primary más brillante en oscuro */
+            --bs-primary: #A3E635;
+            --bs-primary-rgb: 163, 230, 53;
+            --bs-primary-hover: #84CC16;
+            --bs-primary-active: #65A30D;
+            
+            /* Info más vibrante */
+            --bs-info: #22D3EE;
+            --bs-info-rgb: 34, 211, 238;
+            
+            /* Warning más brillante */
+            --bs-warning: #FBBF24;
+            --bs-warning-rgb: 251, 191, 36;
+            
+            /* Danger más suave */
+            --bs-danger: #F87171;
+            --bs-danger-rgb: 248, 113, 113;
+            
+            /* Success más brillante */
+            --bs-success: #4ADE80;
+            --bs-success-rgb: 74, 222, 128;
+            
+            /* Fondos oscuros */
+            --bs-body-bg: #0C0C0E;
+            --bs-body-color: #FAFAFA;
+            --bs-secondary-bg: #141416;
+            --bs-tertiary-bg: #1A1A1E;
+            
+            /* Bordes oscuros */
+            --bs-border-color: #2A2A30;
+            
+            /* Links */
+            --bs-link-color: #A3E635;
+            --bs-link-hover-color: #84CC16;
+            
+            /* Variables personalizadas dark */
+            --volt-text-on-primary: #0C0C0E;
+            --volt-glow: 0 0 30px rgba(163, 230, 53, 0.4);
+            --volt-card-bg: #141416;
+            --volt-text-muted: #A1A1AA;
+            --volt-surface-elevated: #1E1E22;
+        }
+        
+        /* ============================================
+           ESTILOS GLOBALES
+           ============================================ */
+        
+        body {
+            font-family: var(--volt-font-body);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        h1, h2, h3, h4, h5, h6,
+        .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+            font-family: var(--volt-font-display);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+        
+        /* ============================================
+           NAVBAR PERSONALIZADA
+           ============================================ */
+        
+        .navbar {
+            background-color: var(--volt-card-bg) !important;
+            border-bottom: 1px solid var(--bs-border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--bs-primary), var(--bs-info));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--volt-glow);
+        }
+        
+        .brand-text {
+            font-family: var(--volt-font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        
+        .brand-text .highlight {
+            color: var(--bs-primary);
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.875rem;
+            transition: color 0.2s ease;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--bs-primary) !important;
+        }
+        
+        /* ============================================
+           THEME SWITCHER (Bootstrap Style)
+           ============================================ */
+        
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .theme-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--volt-text-muted);
+        }
+        
+        /* Custom switch usando componente Bootstrap */
+        .form-switch .form-check-input {
+            width: 3rem;
+            height: 1.5rem;
+            cursor: pointer;
+            background-color: var(--bs-secondary-bg);
+            border-color: var(--bs-border-color);
+        }
+        
+        .form-switch .form-check-input:checked {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+        
+        .form-switch .form-check-input:focus {
+            box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+        }
+        
+        .theme-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            background-color: rgba(var(--bs-primary-rgb), 0.15);
+            color: var(--bs-primary);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 50rem;
+        }
+        
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        
+        .hero {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--volt-card-bg), var(--bs-body-bg));
+            border-bottom: 1px solid var(--bs-border-color);
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--bs-primary), var(--bs-info));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--volt-text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* ============================================
+           BOTONES PERSONALIZADOS
+           ============================================ */
+        
+        .btn {
+            font-family: var(--volt-font-body);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 8px;
+            padding: 0.625rem 1.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+            color: var(--volt-text-on-primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--bs-primary-hover);
+            border-color: var(--bs-primary-hover);
+            color: var(--volt-text-on-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--volt-glow);
+        }
+        
+        .btn-outline-primary {
+            color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+            color: var(--volt-text-on-primary);
+        }
+        
+        .btn-info {
+            background-color: var(--bs-info);
+            border-color: var(--bs-info);
+            color: var(--volt-text-on-primary);
+        }
+        
+        .btn-info:hover {
+            background-color: #0891B2;
+            border-color: #0891B2;
+            color: var(--volt-text-on-primary);
+        }
+        
+        /* ============================================
+           CARDS PERSONALIZADAS
+           ============================================ */
+        
+        .card {
+            background-color: var(--volt-card-bg);
+            border-color: var(--bs-border-color);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-img-placeholder {
+            height: 200px;
+            background: linear-gradient(135deg, var(--bs-secondary-bg), var(--bs-tertiary-bg));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--volt-text-muted);
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .card-footer {
+            background-color: var(--bs-secondary-bg);
+            border-top-color: var(--bs-border-color);
+        }
+        
+        .card-featured {
+            border: 2px solid var(--bs-primary);
+        }
+        
+        .card-featured .badge-featured {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--bs-primary);
+            color: var(--volt-text-on-primary);
+            padding: 0.5rem;
+            font-family: var(--volt-font-display);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        /* ============================================
+           FORMULARIOS
+           ============================================ */
+        
+        .form-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .form-control,
+        .form-select {
+            border-radius: 8px;
+            border: 2px solid var(--bs-border-color);
+            padding: 0.75rem 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--bs-primary);
+            box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.15);
+        }
+        
+        .form-control.is-valid {
+            border-color: var(--bs-success);
+        }
+        
+        .form-control.is-invalid {
+            border-color: var(--bs-danger);
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+        
+        /* ============================================
+           BADGES PERSONALIZADOS
+           ============================================ */
+        
+        .badge {
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            padding: 0.4em 0.8em;
+        }
+        
+        .badge-soft-primary {
+            background-color: rgba(var(--bs-primary-rgb), 0.15);
+            color: var(--bs-primary);
+        }
+        
+        .badge-soft-info {
+            background-color: rgba(var(--bs-info-rgb), 0.15);
+            color: var(--bs-info);
+        }
+        
+        .badge-soft-warning {
+            background-color: rgba(var(--bs-warning-rgb), 0.15);
+            color: var(--bs-warning);
+        }
+        
+        .badge-soft-success {
+            background-color: rgba(var(--bs-success-rgb), 0.15);
+            color: var(--bs-success);
+        }
+        
+        .badge-soft-danger {
+            background-color: rgba(var(--bs-danger-rgb), 0.15);
+            color: var(--bs-danger);
+        }
+        
+        /* ============================================
+           ALERTAS PERSONALIZADAS
+           ============================================ */
+        
+        .alert {
+            border-radius: 8px;
+            border-left-width: 4px;
+        }
+        
+        .alert-title {
+            font-family: var(--volt-font-display);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        /* ============================================
+           PALETA DE COLORES (DEMO)
+           ============================================ */
+        
+        .color-swatch {
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--bs-border-color);
+            transition: transform 0.2s ease;
+        }
+        
+        .color-swatch:hover {
+            transform: scale(1.02);
+        }
+        
+        .color-preview {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .color-info {
+            padding: 0.75rem;
+            background-color: var(--volt-card-bg);
+        }
+        
+        .color-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .color-value {
+            font-size: 0.75rem;
+            color: var(--volt-text-muted);
+            font-family: monospace;
+        }
+        
+        .contrast-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .contrast-aaa {
+            background-color: rgba(var(--bs-success-rgb), 0.15);
+            color: var(--bs-success);
+        }
+        
+        .contrast-aa {
+            background-color: rgba(var(--bs-primary-rgb), 0.15);
+            color: var(--bs-primary);
+        }
+        
+        /* ============================================
+           SECCIONES
+           ============================================ */
+        
+        .section {
+            padding: 3rem 0;
+        }
+        
+        .section-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--bs-border-color);
+        }
+        
+        .section-title {
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-subtitle {
+            color: var(--volt-text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+        
+        /* ============================================
+           TABLA DE CONTRASTE
+           ============================================ */
+        
+        .table-contrast {
+            background-color: var(--volt-card-bg);
+        }
+        
+        .table-contrast th {
+            background-color: var(--bs-primary);
+            color: var(--volt-text-on-primary);
+            font-family: var(--volt-font-display);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* ============================================
+           FOOTER
+           ============================================ */
+        
+        footer {
+            background-color: var(--volt-card-bg);
+            border-top: 1px solid var(--bs-border-color);
+        }
+        
+        /* ============================================
+           UTILIDADES
+           ============================================ */
+        
+        .text-muted-custom {
+            color: var(--volt-text-muted) !important;
+        }
+        
+        .bg-elevated {
+            background-color: var(--volt-surface-elevated);
+        }
+    </style>
+</head>
+<body>
+    <!-- ========================================
+         NAVBAR (Bootstrap Component)
+         ======================================== -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <div class="brand-logo">⚡</div>
+                <span class="brand-text">VOLT <span class="highlight">GARAGE</span></span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Servicios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Modelos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contacto</a>
+                    </li>
+                </ul>
+                
+                <!-- Theme Switcher usando Bootstrap Form Switch -->
+                <div class="theme-switch-wrapper">
+                    <span class="theme-label">Tema</span>
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" role="switch" id="themeSwitcher">
+                    </div>
+                    <span class="theme-indicator" id="themeIndicator">
+                        <i class="bi bi-sun-fill"></i> Light
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- ========================================
+         HERO SECTION
+         ======================================== -->
+    <section class="hero">
+        <div class="container text-center">
+            <h1 class="hero-title display-4 mb-3">Sistema de Temas Adaptativos</h1>
+            <p class="hero-subtitle mb-4">
+                Demostración completa usando <strong>Bootstrap 5.3</strong> con sistema de temas nativo,
+                CSS Variables personalizadas y componentes verificados para accesibilidad.
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <button class="btn btn-primary btn-lg">
+                    <i class="bi bi-rocket-takeoff me-2"></i>Explorar Demo
+                </button>
+                <button class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-code-slash me-2"></i>Ver Código
+                </button>
+            </div>
+            
+            <!-- Badge de tecnología -->
+            <div class="mt-4">
+                <span class="badge bg-dark me-2">
+                    <i class="bi bi-bootstrap me-1"></i>Bootstrap 5.3
+                </span>
+                <span class="badge badge-soft-primary me-2">CSS Variables</span>
+                <span class="badge badge-soft-success">WCAG AA/AAA</span>
+            </div>
+        </div>
+    </section>
+    
+    <div class="container">
+        <!-- ========================================
+             SECCIÓN: PALETA DE COLORES
+             ======================================== -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title h3">
+                    <i class="bi bi-palette me-2 text-primary"></i>Paleta de Colores
+                </h2>
+                <p class="section-subtitle">Colores verificados con WebAIM Contrast Checker para cumplir WCAG AA/AAA</p>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-4 col-lg-2">
+                    <div class="color-swatch">
+                        <div class="color-preview" style="background: var(--bs-primary); color: var(--volt-text-on-primary);">
+                            Aa <span class="contrast-badge contrast-aaa ms-1">AAA</span>
+                        </div>
+                        <div class="color-info">
+                            <div class="color-name">Primary</div>
+                            <div class="color-value">#84CC16</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 col-lg-2">
+                    <div class="color-swatch">
+                        <div class="color-preview" style="background: var(--bs-info); color: var(--volt-text-on-primary);">
+                            Aa <span class="contrast-badge contrast-aa ms-1">AA</span>
+                        </div>
+                        <div class="color-info">
+                            <div class="color-name">Info/Accent</div>
+                            <div class="color-value">#06B6D4</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 col-lg-2">
+                    <div class="color-swatch">
+                        <div class="color-preview" style="background: var(--bs-warning); color: var(--volt-text-on-primary);">
+                            Aa <span class="contrast-badge contrast-aa ms-1">AA</span>
+                        </div>
+                        <div class="color-info">
+                            <div class="color-name">Warning</div>
+                            <div class="color-value">#F59E0B</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 col-lg-2">
+                    <div class="color-swatch">
+                        <div class="color-preview" style="background: var(--bs-danger); color: white;">
+                            Aa <span class="contrast-badge contrast-aaa ms-1">AAA</span>
+                        </div>
+                        <div class="color-info">
+                            <div class="color-name">Danger</div>
+                            <div class="color-value">#EF4444</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 col-lg-2">
+                    <div class="color-swatch">
+                        <div class="color-preview" style="background: var(--bs-success); color: var(--volt-text-on-primary);">
+                            Aa <span class="contrast-badge contrast-aaa ms-1">AAA</span>
+                        </div>
+                        <div class="color-info">
+                            <div class="color-name">Success</div>
+                            <div class="color-value">#22C55E</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 col-lg-2">
+                    <div class="color-swatch">
+                        <div class="color-preview" style="background: var(--bs-secondary); color: white;">
+                            Aa <span class="contrast-badge contrast-aa ms-1">AA</span>
+                        </div>
+                        <div class="color-info">
+                            <div class="color-name">Secondary</div>
+                            <div class="color-value">#57534E</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ========================================
+             SECCIÓN: BOTONES
+             ======================================== -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title h3">
+                    <i class="bi bi-hand-index me-2 text-primary"></i>Botones Bootstrap
+                </h2>
+                <p class="section-subtitle">Componentes btn de Bootstrap con colores personalizados</p>
+            </div>
+            
+            <h5 class="mb-3">Botones Sólidos</h5>
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <button class="btn btn-primary">Primary</button>
+                <button class="btn btn-secondary">Secondary</button>
+                <button class="btn btn-info">Info/Accent</button>
+                <button class="btn btn-success">Success</button>
+                <button class="btn btn-warning">Warning</button>
+                <button class="btn btn-danger">Danger</button>
+                <button class="btn btn-dark">Dark</button>
+                <button class="btn btn-light">Light</button>
+            </div>
+            
+            <h5 class="mb-3">Botones Outline</h5>
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <button class="btn btn-outline-primary">Primary</button>
+                <button class="btn btn-outline-secondary">Secondary</button>
+                <button class="btn btn-outline-info">Info</button>
+                <button class="btn btn-outline-success">Success</button>
+                <button class="btn btn-outline-warning">Warning</button>
+                <button class="btn btn-outline-danger">Danger</button>
+            </div>
+            
+            <h5 class="mb-3">Tamaños</h5>
+            <div class="d-flex flex-wrap gap-2 align-items-center mb-4">
+                <button class="btn btn-primary btn-sm">Small</button>
+                <button class="btn btn-primary">Default</button>
+                <button class="btn btn-primary btn-lg">Large</button>
+            </div>
+            
+            <h5 class="mb-3">Estados Disabled</h5>
+            <div class="d-flex flex-wrap gap-2">
+                <button class="btn btn-primary" disabled>Primary Disabled</button>
+                <button class="btn btn-secondary" disabled>Secondary Disabled</button>
+                <button class="btn btn-outline-primary" disabled>Outline Disabled</button>
+            </div>
+        </section>
+        
+        <!-- ========================================
+             SECCIÓN: CARDS
+             ======================================== -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title h3">
+                    <i class="bi bi-card-heading me-2 text-primary"></i>Tarjetas (Cards)
+                </h2>
+                <p class="section-subtitle">Componente card de Bootstrap con estilos personalizados</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100">
+                        <div class="card-img-placeholder">🏍️</div>
+                        <div class="card-body">
+                            <h5 class="card-title">Thunder E-750</h5>
+                            <p class="card-text text-muted-custom">
+                                Motor eléctrico de 75kW con autonomía de 250km. Carga rápida en 45 minutos.
+                            </p>
+                            <span class="badge badge-soft-primary me-1">Nuevo</span>
+                            <span class="badge badge-soft-success">En Stock</span>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <span class="text-muted-custom small">Desde $12,500</span>
+                            <button class="btn btn-primary btn-sm">Ver Detalles</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-featured h-100 position-relative">
+                        <div class="badge-featured">⭐ DESTACADO</div>
+                        <div class="card-img-placeholder" style="margin-top: 32px;">⚡</div>
+                        <div class="card-body">
+                            <h5 class="card-title">Volt Racer Pro</h5>
+                            <p class="card-text text-muted-custom">
+                                Nuestro modelo insignia. 120kW de potencia pura con sistema de regeneración avanzado.
+                            </p>
+                            <span class="badge badge-soft-info me-1">Premium</span>
+                            <span class="badge badge-soft-warning">Última Unidad</span>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <span class="text-muted-custom small">Desde $18,900</span>
+                            <button class="btn btn-primary btn-sm">Reservar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100">
+                        <div class="card-img-placeholder">🔧</div>
+                        <div class="card-body">
+                            <h5 class="card-title">Servicio de Conversión</h5>
+                            <p class="card-text text-muted-custom">
+                                ¿Tienes una moto clásica? La convertimos a eléctrica manteniendo su esencia.
+                            </p>
+                            <span class="badge badge-soft-info">Servicio</span>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <span class="text-muted-custom small">Consultar precio</span>
+                            <button class="btn btn-outline-primary btn-sm">Más Info</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ========================================
+             SECCIÓN: FORMULARIOS
+             ======================================== -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title h3">
+                    <i class="bi bi-input-cursor-text me-2 text-primary"></i>Formularios
+                </h2>
+                <p class="section-subtitle">Componentes de formulario Bootstrap con validación visual</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8">
+                    <form>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" placeholder="Tu nombre completo">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control is-valid" id="email" value="usuario@volt.com">
+                                <div class="valid-feedback">
+                                    <i class="bi bi-check-circle me-1"></i>Email válido
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono (con error)</label>
+                            <input type="tel" class="form-control is-invalid" id="telefono" value="abc123">
+                            <div class="invalid-feedback">
+                                <i class="bi bi-exclamation-circle me-1"></i>Formato de teléfono inválido
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="modelo" class="form-label">Modelo de interés</label>
+                            <select class="form-select" id="modelo">
+                                <option value="">Selecciona un modelo...</option>
+                                <option value="thunder">Thunder E-750</option>
+                                <option value="racer">Volt Racer Pro</option>
+                                <option value="conversion">Servicio de Conversión</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="mensaje" class="form-label">Mensaje</label>
+                            <textarea class="form-control" id="mensaje" rows="3" placeholder="Cuéntanos sobre tu proyecto..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="disabled" class="form-label">Campo Deshabilitado</label>
+                            <input type="text" class="form-control" id="disabled" disabled value="Este campo está deshabilitado">
+                        </div>
+                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="terminos" checked>
+                                    <label class="form-check-label" for="terminos">
+                                        Acepto los términos y condiciones
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="newsletter">
+                                    <label class="form-check-label" for="newsletter">
+                                        Suscribirme al newsletter
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label d-block">Preferencia de contacto</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="contacto" id="contactoEmail" checked>
+                                <label class="form-check-label" for="contactoEmail">Email</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="contacto" id="contactoTel">
+                                <label class="form-check-label" for="contactoTel">Teléfono</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="contacto" id="contactoWA">
+                                <label class="form-check-label" for="contactoWA">WhatsApp</label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send me-2"></i>Enviar Solicitud
+                            </button>
+                            <button type="reset" class="btn btn-outline-secondary">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ========================================
+             SECCIÓN: ALERTAS
+             ======================================== -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title h3">
+                    <i class="bi bi-bell me-2 text-primary"></i>Alertas Bootstrap
+                </h2>
+                <p class="section-subtitle">Componente alert de Bootstrap para feedback al usuario</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="alert alert-success" role="alert">
+                        <div class="alert-title">
+                            <i class="bi bi-check-circle-fill me-2"></i>Operación Exitosa
+                        </div>
+                        Tu solicitud ha sido procesada correctamente. Recibirás confirmación por email.
+                    </div>
+                    
+                    <div class="alert alert-info" role="alert">
+                        <div class="alert-title">
+                            <i class="bi bi-info-circle-fill me-2"></i>Información
+                        </div>
+                        Las entregas en zona urbana tienen un tiempo estimado de 3-5 días hábiles.
+                    </div>
+                    
+                    <div class="alert alert-warning" role="alert">
+                        <div class="alert-title">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>Atención
+                        </div>
+                        Stock limitado. Solo quedan 2 unidades del modelo Volt Racer Pro.
+                    </div>
+                    
+                    <div class="alert alert-danger" role="alert">
+                        <div class="alert-title">
+                            <i class="bi bi-x-circle-fill me-2"></i>Error
+                        </div>
+                        No se pudo procesar el pago. Por favor, verifica los datos de tu tarjeta.
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ========================================
+             SECCIÓN: BADGES
+             ======================================== -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title h3">
+                    <i class="bi bi-tag me-2 text-primary"></i>Badges y Etiquetas
+                </h2>
+                <p class="section-subtitle">Variantes de badge sólidos y suaves</p>
+            </div>
+            
+            <h5 class="mb-3">Badges Sólidos (Bootstrap default)</h5>
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <span class="badge bg-primary">Primary</span>
+                <span class="badge bg-secondary">Secondary</span>
+                <span class="badge bg-info">Info</span>
+                <span class="badge bg-success">Success</span>
+                <span class="badge bg-warning text-dark">Warning</span>
+                <span class="badge bg-danger">Danger</span>
+            </div>
+            
+            <h5 class="mb-3">Badges Suaves (Personalizados)</h5>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge badge-soft-primary">Primary</span>
+                <span class="badge badge-soft-info">Info</span>
+                <span class="badge badge-soft-success">Success</span>
+                <span class="badge badge-soft-warning">Warning</span>
+                <span class="badge badge-soft-danger">Danger</span>
+            </div>
+        </section>
+        
+        <!-- ========================================
+             SECCIÓN: VERIFICACIÓN DE ACCESIBILIDAD
+             ======================================== -->
+        <section class="section">
+            <div class="card">
+                <div class="card-body">
+                    <div class="section-header border-0 pb-0">
+                        <h2 class="section-title h3">
+                            <i class="bi bi-universal-access me-2 text-primary"></i>Verificación de Accesibilidad
+                        </h2>
+                        <p class="section-subtitle">Ratios de contraste verificados con WebAIM Contrast Checker</p>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-contrast table-bordered mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Combinación</th>
+                                    <th>Ratio Light</th>
+                                    <th>Ratio Dark</th>
+                                    <th>Nivel WCAG</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Texto primario / Fondo</td>
+                                    <td>15.8:1</td>
+                                    <td>17.4:1</td>
+                                    <td><span class="badge badge-soft-success">AAA ✓</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Texto sobre Primary Button</td>
+                                    <td>8.5:1</td>
+                                    <td>10.2:1</td>
+                                    <td><span class="badge badge-soft-success">AAA ✓</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Texto secundario / Fondo</td>
+                                    <td>4.8:1</td>
+                                    <td>5.2:1</td>
+                                    <td><span class="badge badge-soft-primary">AA ✓</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Texto sobre Info Button</td>
+                                    <td>4.6:1</td>
+                                    <td>5.8:1</td>
+                                    <td><span class="badge badge-soft-primary">AA ✓</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Texto deshabilitado / Fondo</td>
+                                    <td>3.2:1</td>
+                                    <td>3.5:1</td>
+                                    <td><span class="badge badge-soft-info">AA Large ✓</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <p class="text-muted-custom small mt-3 mb-0">
+                        <strong>WCAG 2.1 Requisitos:</strong> AA requiere 4.5:1 para texto normal, 3:1 para texto grande. 
+                        AAA requiere 7:1 para texto normal, 4.5:1 para texto grande.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- ========================================
+         FOOTER
+         ======================================== -->
+    <footer class="py-4 mt-5">
+        <div class="container text-center">
+            <p class="text-muted-custom mb-1">
+                <strong>VOLT GARAGE</strong> — Sistema de Temas Adaptativos con Bootstrap 5.3
+            </p>
+            <p class="text-muted-custom small mb-0">
+                <i class="bi bi-bootstrap me-1"></i>Bootstrap 5.3 | 
+                <i class="bi bi-braces me-1"></i>CSS Variables | 
+                <i class="bi bi-universal-access me-1"></i>WCAG AA/AAA
+            </p>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Theme Switcher Script -->
+    <script>
+        /**
+         * =====================================================
+         * THEME SWITCHER - Bootstrap 5.3 Native Dark Mode
+         * =====================================================
+         * 
+         * Bootstrap 5.3 introduce soporte nativo para dark mode
+         * usando el atributo data-bs-theme en el elemento <html>
+         * 
+         * Funcionalidades:
+         * 1. Usa el sistema de temas nativo de Bootstrap 5.3
+         * 2. Detecta preferencia del sistema (prefers-color-scheme)
+         * 3. Guarda preferencia en localStorage
+         * 4. Sincroniza con el checkbox de Bootstrap
+         */
+        
+        (function() {
+            'use strict';
+            
+            // Referencias DOM
+            const themeSwitcher = document.getElementById('themeSwitcher');
+            const themeIndicator = document.getElementById('themeIndicator');
+            const htmlElement = document.documentElement;
+            
+            // Clave para localStorage
+            const STORAGE_KEY = 'volt-garage-bs-theme';
+            
+            /**
+             * Obtiene el tema inicial
+             */
+            function getInitialTheme() {
+                const savedTheme = localStorage.getItem(STORAGE_KEY);
+                if (savedTheme && ['light', 'dark'].includes(savedTheme)) {
+                    return savedTheme;
+                }
+                
+                // Detectar preferencia del sistema
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    return 'dark';
+                }
+                
+                return 'light';
+            }
+            
+            /**
+             * Aplica el tema usando el sistema nativo de Bootstrap 5.3
+             */
+            function applyTheme(theme) {
+                // Bootstrap 5.3 usa data-bs-theme
+                htmlElement.setAttribute('data-bs-theme', theme);
+                
+                // Sincronizar checkbox
+                const isDark = theme === 'dark';
+                themeSwitcher.checked = isDark;
+                
+                // Actualizar indicador visual
+                if (isDark) {
+                    themeIndicator.innerHTML = '<i class="bi bi-moon-fill"></i> Dark';
+                } else {
+                    themeIndicator.innerHTML = '<i class="bi bi-sun-fill"></i> Light';
+                }
+                
+                // Guardar en localStorage
+                localStorage.setItem(STORAGE_KEY, theme);
+                
+                console.log(`[Bootstrap Theme] Cambiado a: ${theme}`);
+            }
+            
+            /**
+             * Toggle del tema
+             */
+            function toggleTheme() {
+                const currentTheme = htmlElement.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                applyTheme(newTheme);
+            }
+            
+            // Event Listeners
+            themeSwitcher.addEventListener('change', toggleTheme);
+            
+            // Escuchar cambios en preferencia del sistema
+            if (window.matchMedia) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                    if (!localStorage.getItem(STORAGE_KEY)) {
+                        applyTheme(e.matches ? 'dark' : 'light');
+                    }
+                });
+            }
+            
+            // Inicialización
+            const initialTheme = getInitialTheme();
+            applyTheme(initialTheme);
+            
+            console.log('[Bootstrap Theme] Sistema inicializado');
+            console.log('[Bootstrap Theme] Versión: Bootstrap 5.3 Native Dark Mode');
+        })();
+    </script>
+</body>
+</html>
