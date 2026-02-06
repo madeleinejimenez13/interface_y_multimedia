@@ -1,0 +1,176 @@
+<div class="register-container">
+  <mat-card class="register-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>person_add</mat-icon>
+        Registrar Nuevo Usuario
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Fila 1: Nombre y Apellido -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Nombre</mat-label>
+            <input 
+              matInput 
+              formControlName="firstName" 
+              placeholder="Ej: Juan"
+              required>
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="userForm.get('firstName')?.invalid">
+              {{ getErrorMessage('firstName') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Apellido</mat-label>
+            <input 
+              matInput 
+              formControlName="lastName" 
+              placeholder="Ej: Pérez"
+              required>
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="userForm.get('lastName')?.invalid">
+              {{ getErrorMessage('lastName') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Fila 2: Email y Teléfono -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Email</mat-label>
+            <input 
+              matInput 
+              formControlName="email" 
+              type="email"
+              placeholder="ejemplo@correo.com"
+              required>
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error *ngIf="userForm.get('email')?.invalid">
+              {{ getErrorMessage('email') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Teléfono</mat-label>
+            <input 
+              matInput 
+              formControlName="phone" 
+              type="tel"
+              placeholder="0999999999"
+              required>
+            <mat-icon matPrefix>phone</mat-icon>
+            <mat-error *ngIf="userForm.get('phone')?.invalid">
+              {{ getErrorMessage('phone') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Fila 3: Fecha de Nacimiento y Rol -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Fecha de Nacimiento</mat-label>
+            <input 
+              matInput 
+              [matDatepicker]="picker"
+              formControlName="birthDate"
+              [max]="maxDate"
+              placeholder="DD/MM/AAAA"
+              required>
+            <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-hint>Debe ser mayor de 18 años</mat-hint>
+            <mat-error *ngIf="userForm.get('birthDate')?.invalid">
+              {{ getErrorMessage('birthDate') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Rol</mat-label>
+            <mat-select formControlName="role" required>
+              <mat-option *ngFor="let role of roles" [value]="role.value">
+                {{ role.label }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>verified_user</mat-icon>
+            <mat-error *ngIf="userForm.get('role')?.invalid">
+              {{ getErrorMessage('role') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Fila 4: Dirección y Ciudad -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Dirección</mat-label>
+            <input 
+              matInput 
+              formControlName="address" 
+              placeholder="Calle principal y secundaria">
+            <mat-icon matPrefix>home</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Ciudad</mat-label>
+            <input 
+              matInput 
+              formControlName="city" 
+              placeholder="Ej: Quito"
+              required>
+            <mat-icon matPrefix>location_city</mat-icon>
+            <mat-error *ngIf="userForm.get('city')?.invalid">
+              {{ getErrorMessage('city') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="form-actions">
+          <button 
+            mat-stroked-button 
+            type="button"
+            (click)="onCancel()">
+            <mat-icon>close</mat-icon>
+            Cancelar
+          </button>
+          
+          <button 
+            mat-raised-button 
+            color="primary"
+            type="submit"
+            [disabled]="!userForm.valid">
+            <mat-icon>save</mat-icon>
+            Guardar Usuario
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Card de información sobre validaciones -->
+  <mat-card class="info-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>info</mat-icon>
+        Estado del Formulario
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p><strong>Formulario válido:</strong> 
+        <span [class.valid]="userForm.valid" [class.invalid]="!userForm.valid">
+          {{ userForm.valid ? 'SÍ ✓' : 'NO ✗' }}
+        </span>
+      </p>
+      <p><strong>Campos completados:</strong> {{ userForm.value | json }}</p>
+      <p class="hint">
+        <mat-icon>lightbulb</mat-icon>
+        El botón "Guardar Usuario" solo se habilita cuando todos los campos requeridos son válidos.
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,80 @@
+.sidenav-container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 260px;
+  background-color: #fff;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+
+  .sidenav-header {
+    padding: 24px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    
+    .logo-icon {
+      font-size: 36px;
+      width: 36px;
+      height: 36px;
+      color: #673ab7;
+    }
+    
+    h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 500;
+      color: #333;
+    }
+  }
+
+  mat-nav-list {
+    padding-top: 8px;
+  }
+
+  .active-link {
+    background-color: rgba(103, 58, 183, 0.08);
+    
+    mat-icon {
+      color: #673ab7;
+    }
+    
+    span {
+      color: #673ab7;
+      font-weight: 500;
+    }
+  }
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .toolbar-title {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+}
+
+.content {
+  padding: 24px;
+  min-height: calc(100vh - 64px);
+  
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+}
+
+// Ocultar badge en móviles pequeños
+@media (max-width: 599px) {
+  .toolbar-title {
+    font-size: 16px;
+  }
+}

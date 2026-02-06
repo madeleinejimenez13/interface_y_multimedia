@@ -1,0 +1,140 @@
+.register-container {
+  max-width: 900px;
+  margin: 0 auto;
+
+  .register-card {
+    margin-bottom: 24px;
+
+    mat-card-header {
+      margin-bottom: 24px;
+
+      mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 24px;
+        
+        mat-icon {
+          font-size: 28px;
+          width: 28px;
+          height: 28px;
+          color: #673ab7;
+        }
+      }
+    }
+
+    mat-card-content {
+      padding: 24px;
+    }
+  }
+
+  .form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 8px;
+
+    .form-field-full {
+      flex: 1;
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e0e0e0;
+
+    button {
+      min-width: 140px;
+
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column-reverse;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+
+  .info-card {
+    background-color: #f5f5ff;
+
+    mat-card-header {
+      mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 18px;
+        color: #673ab7;
+
+        mat-icon {
+          color: #673ab7;
+        }
+      }
+    }
+
+    mat-card-content {
+      p {
+        margin: 12px 0;
+        font-size: 14px;
+
+        strong {
+          color: #333;
+        }
+
+        .valid {
+          color: #4caf50;
+          font-weight: 600;
+        }
+
+        .invalid {
+          color: #f44336;
+          font-weight: 600;
+        }
+
+        &.hint {
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
+          margin-top: 16px;
+          padding: 12px;
+          background-color: #fff3e0;
+          border-radius: 4px;
+          color: #666;
+
+          mat-icon {
+            color: #ff9800;
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Estilos globales para los snackbars
+::ng-deep {
+  .success-snackbar {
+    background-color: #4caf50 !important;
+    color: white !important;
+  }
+
+  .error-snackbar {
+    background-color: #f44336 !important;
+    color: white !important;
+  }
+}

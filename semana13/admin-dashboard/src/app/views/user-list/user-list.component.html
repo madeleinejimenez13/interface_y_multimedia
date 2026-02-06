@@ -1,0 +1,100 @@
+<div class="user-list-container">
+  <div class="header">
+    <h1>
+      <mat-icon>people</mat-icon>
+      Lista de Usuarios
+    </h1>
+    <p class="subtitle">Gestione todos los usuarios del sistema</p>
+  </div>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+
+      <!-- Columna ID -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef class="id-column">ID</th>
+        <td mat-cell *matCellDef="let user" class="id-column">{{ user.id }}</td>
+      </ng-container>
+
+      <!-- Columna Nombre -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nombre Completo</th>
+        <td mat-cell *matCellDef="let user">
+          <div class="user-info">
+            <div class="user-avatar">
+              {{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}
+            </div>
+            <div class="user-details">
+              <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+              <span class="user-phone mobile-hidden">{{ user.phone }}</span>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Columna Email -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef class="mobile-hidden">Email</th>
+        <td mat-cell *matCellDef="let user" class="mobile-hidden">
+          <div class="email-cell">
+            <mat-icon class="email-icon">email</mat-icon>
+            {{ user.email }}
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Columna Rol -->
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>Rol</th>
+        <td mat-cell *matCellDef="let user">
+          <mat-chip [color]="getRoleColor(user.role)" highlighted>
+            {{ user.role }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Columna Estado -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef class="mobile-hidden">Estado</th>
+        <td mat-cell *matCellDef="let user" class="mobile-hidden">
+          <mat-chip [color]="getStatusColor(user.status)" highlighted>
+            {{ user.status }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Columna Acciones -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="actions-column">Acciones</th>
+        <td mat-cell *matCellDef="let user" class="actions-column">
+          <div class="action-buttons">
+            <button 
+              mat-icon-button 
+              color="primary"
+              (click)="viewUser(user)"
+              matTooltip="Ver detalles"
+              aria-label="Ver detalles del usuario">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            
+            <button 
+              mat-icon-button 
+              color="warn"
+              (click)="deleteUser(user)"
+              matTooltip="Eliminar usuario"
+              aria-label="Eliminar usuario">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="user-row"></tr>
+    </table>
+
+    <div class="table-footer">
+      <p>Total de usuarios: <strong>{{ dataSource.length }}</strong></p>
+    </div>
+  </div>
+</div>
