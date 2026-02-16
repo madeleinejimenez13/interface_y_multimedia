@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accesibilidad Cognitiva en Entornos 3D - Prototipo PoC</title>
+    
+    <!-- A-Frame Core -->
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    
+    <!-- A-Frame Environment Component -->
+    <script src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
+    
+    <style>
+        /* ============================================
+           PANEL DE CONTROL DE ACCESIBILIDAD
+           Sistema de reducción de carga cognitiva
+           ============================================ */
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            overflow: hidden;
+        }
+        
+        /* Panel de Control Principal */
+        #accessibility-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(30, 30, 40, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            width: 320px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        #accessibility-panel.collapsed {
+            transform: translateX(-280px);
+        }
+        
+        #accessibility-panel h2 {
+            margin: 0 0 20px 0;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #accessibility-panel h2::before {
+            content: '♿';
+            font-size: 24px;
+        }
+        
+        .toggle-panel-btn {
+            position: absolute;
+            right: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 60px;
+            background: rgba(30, 30, 40, 0.95);
+            border: none;
+            border-radius: 0 8px 8px 0;
+            color: #fff;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        
+        /* Secciones del Panel */
+        .control-section {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .control-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .control-section h3 {
+            margin: 0 0 12px 0;
+            color: #9ca3af;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Controles de Slider */
+        .slider-control {
+            margin-bottom: 16px;
+        }
+        
+        .slider-control label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #e5e7eb;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .slider-control label span {
+            color: #60a5fa;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: right;
+        }
+        
+        .slider-control input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #60a5fa;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .slider-control input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+        
+        /* Toggle Switches */
+        .toggle-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+        
+        .toggle-control:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .toggle-control label {
+            color: #e5e7eb;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: 0.3s;
+            border-radius: 26px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #10b981;
+        }
+        
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(22px);
+        }
+        
+        /* Botones de Preset */
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .preset-btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .preset-btn.calm {
+            background: linear-gradient(135deg, #065f46, #047857);
+            color: white;
+        }
+        
+        .preset-btn.focus {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+        }
+        
+        .preset-btn.high-contrast {
+            background: linear-gradient(135deg, #18181b, #27272a);
+            color: white;
+            border: 2px solid #fbbf24;
+        }
+        
+        .preset-btn.default {
+            background: linear-gradient(135deg, #374151, #4b5563);
+            color: white;
+        }
+        
+        .preset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .preset-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Indicador de Carga Cognitiva */
+        #cognitive-load-indicator {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        
+        #cognitive-load-indicator h4 {
+            margin: 0 0 12px 0;
+            color: #9ca3af;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .load-meter {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .load-meter-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease, background 0.5s ease;
+        }
+        
+        .load-status {
+            font-size: 13px;
+            color: #e5e7eb;
+            text-align: center;
+        }
+        
+        /* Indicador de Audio/Háptico */
+        #feedback-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .feedback-badge {
+            padding: 10px 16px;
+            background: rgba(30, 30, 40, 0.9);
+            border-radius: 20px;
+            color: #e5e7eb;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .feedback-badge.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .feedback-badge .icon {
+            font-size: 18px;
+        }
+        
+        /* Tooltip de Ayuda */
+        .help-tooltip {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(30, 30, 40, 0.98);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 480px;
+            z-index: 2000;
+            display: none;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+        }
+        
+        .help-tooltip.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        .help-tooltip h3 {
+            margin: 0 0 16px 0;
+            color: #fff;
+            font-size: 20px;
+        }
+        
+        .help-tooltip p {
+            margin: 0 0 12px 0;
+            color: #9ca3af;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .help-tooltip .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        /* Overlay de fondo */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1999;
+            display: none;
+        }
+        
+        .overlay.visible {
+            display: block;
+        }
+        
+        /* Instrucciones iniciales */
+        #instructions {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(30, 30, 40, 0.9);
+            padding: 12px 24px;
+            border-radius: 30px;
+            color: #e5e7eb;
+            font-size: 14px;
+            z-index: 100;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        #instructions kbd {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        /* Responsivo */
+        @media (max-width: 768px) {
+            #accessibility-panel {
+                width: calc(100% - 40px);
+                max-width: 320px;
+            }
+            
+            #instructions {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         PANEL DE CONTROL DE ACCESIBILIDAD
+         ============================================ -->
+    <div id="accessibility-panel">
+        <button class="toggle-panel-btn" onclick="togglePanel()">☰</button>
+        
+        <h2>Accesibilidad Cognitiva</h2>
+        
+        <!-- Presets Rápidos -->
+        <div class="control-section">
+            <h3>Perfiles Predefinidos</h3>
+            <div class="preset-buttons">
+                <button class="preset-btn calm" onclick="applyPreset('calm')">🧘 Calma</button>
+                <button class="preset-btn focus" onclick="applyPreset('focus')">🎯 Enfoque</button>
+                <button class="preset-btn high-contrast" onclick="applyPreset('highContrast')">👁️ Contraste</button>
+                <button class="preset-btn default" onclick="applyPreset('default')">↺ Default</button>
+            </div>
+        </div>
+        
+        <!-- Control de Carga Sensorial -->
+        <div class="control-section">
+            <h3>Reducción de Ruido Sensorial</h3>
+            
+            <div class="slider-control">
+                <label>
+                    Objetos visibles
+                    <span id="object-count-display">6</span>
+                </label>
+                <input type="range" id="object-count" min="1" max="10" value="6" 
+                       oninput="updateObjectCount(this.value)">
+            </div>
+            
+            <div class="slider-control">
+                <label>
+                    Intensidad de color
+                    <span id="color-intensity-display">100%</span>
+                </label>
+                <input type="range" id="color-intensity" min="20" max="100" value="100" 
+                       oninput="updateColorIntensity(this.value)">
+            </div>
+            
+            <div class="slider-control">
+                <label>
+                    Velocidad de animación
+                    <span id="animation-speed-display">1x</span>
+                </label>
+                <input type="range" id="animation-speed" min="0" max="100" value="50" 
+                       oninput="updateAnimationSpeed(this.value)">
+            </div>
+        </div>
+        
+        <!-- Asistencia Sensorial -->
+        <div class="control-section">
+            <h3>Asistencia Multimodal</h3>
+            
+            <div class="toggle-control">
+                <label for="audio-cues">🔊 Señales de audio</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="audio-cues" checked onchange="toggleAudioCues(this.checked)">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
+            
+            <div class="toggle-control">
+                <label for="haptic-feedback">📳 Feedback háptico</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="haptic-feedback" checked onchange="toggleHapticFeedback(this.checked)">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
+            
+            <div class="toggle-control">
+                <label for="visual-guides">🧭 Guías visuales</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="visual-guides" checked onchange="toggleVisualGuides(this.checked)">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
+            
+            <div class="toggle-control">
+                <label for="reduce-motion">🐢 Reducir movimiento</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="reduce-motion" onchange="toggleReduceMotion(this.checked)">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Control de Entorno -->
+        <div class="control-section">
+            <h3>Entorno Visual</h3>
+            
+            <div class="slider-control">
+                <label>
+                    Iluminación ambiental
+                    <span id="ambient-light-display">60%</span>
+                </label>
+                <input type="range" id="ambient-light" min="10" max="100" value="60" 
+                       oninput="updateAmbientLight(this.value)">
+            </div>
+            
+            <div class="slider-control">
+                <label>
+                    Niebla (profundidad)
+                    <span id="fog-density-display">0%</span>
+                </label>
+                <input type="range" id="fog-density" min="0" max="100" value="0" 
+                       oninput="updateFogDensity(this.value)">
+            </div>
+        </div>
+        
+        <!-- Indicador de Carga Cognitiva -->
+        <div id="cognitive-load-indicator">
+            <h4>📊 Estimación de Carga Cognitiva</h4>
+            <div class="load-meter">
+                <div class="load-meter-fill" id="load-meter-fill"></div>
+            </div>
+            <div class="load-status" id="load-status">Calculando...</div>
+        </div>
+        
+        <button class="preset-btn default" style="width: 100%; margin-top: 16px;" onclick="showHelp()">
+            ❓ ¿Cómo funciona esto?
+        </button>
+    </div>
+    
+    <!-- Indicadores de Feedback -->
+    <div id="feedback-indicator">
+        <div class="feedback-badge" id="audio-badge">
+            <span class="icon">🔊</span>
+            <span>Audio activo</span>
+        </div>
+        <div class="feedback-badge" id="haptic-badge">
+            <span class="icon">📳</span>
+            <span>Vibración</span>
+        </div>
+    </div>
+    
+    <!-- Instrucciones -->
+    <div id="instructions">
+        <span><kbd>WASD</kbd> Mover</span>
+        <span><kbd>Mouse</kbd> Mirar</span>
+        <span><kbd>Click</kbd> en objetos para interactuar</span>
+    </div>
+    
+    <!-- Overlay y Tooltip de Ayuda -->
+    <div class="overlay" id="help-overlay" onclick="hideHelp()"></div>
+    <div class="help-tooltip" id="help-tooltip">
+        <button class="close-btn" onclick="hideHelp()">✕</button>
+        <h3>🧠 Accesibilidad Cognitiva en 3D</h3>
+        <p><strong>Este prototipo implementa principios de reducción de carga cognitiva</strong> basados en la Teoría de Carga Cognitiva de John Sweller.</p>
+        <p>La memoria de trabajo humana solo puede procesar <strong>4±2 elementos simultáneos</strong>. En entornos 3D complejos, el exceso de estímulos causa sobrecarga sensorial, especialmente en personas neurodivergentes.</p>
+        <p><strong>Controles disponibles:</strong></p>
+        <p>• <strong>Objetos visibles:</strong> Reduce la cantidad de elementos en escena para disminuir la carga extrínseca.</p>
+        <p>• <strong>Intensidad de color:</strong> Colores suaves reducen la estimulación visual.</p>
+        <p>• <strong>Asistencia multimodal:</strong> Audio y hápticos proporcionan información redundante sin sobrecargar el canal visual.</p>
+        <p>• <strong>Perfiles predefinidos:</strong> Configuraciones optimizadas para diferentes necesidades.</p>
+    </div>
+    
+    <!-- ============================================
+         ESCENA A-FRAME 3D
+         ============================================ -->
+    <a-scene 
+        id="main-scene"
+        fog="type: exponential; color: #1a1a2e; density: 0"
+        cursor="rayOrigin: mouse"
+        raycaster="objects: .interactive">
+        
+        <!-- Assets -->
+        <a-assets>
+            <!-- Audio cues para feedback -->
+            <audio id="hover-sound" src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2teleW4sWZT..."></audio>
+            <audio id="click-sound" src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2teleW4sWZT..."></audio>
+        </a-assets>
+        
+        <!-- Iluminación -->
+        <a-entity id="ambient-light-entity" light="type: ambient; color: #BBB; intensity: 0.6"></a-entity>
+        <a-entity light="type: directional; color: #FFF; intensity: 0.4" position="-1 2 1"></a-entity>
+        
+        <!-- Entorno base -->
+        <a-sky id="sky" color="#1a1a2e"></a-sky>
+        <a-plane 
+            id="ground"
+            position="0 0 0" 
+            rotation="-90 0 0" 
+            width="50" 
+            height="50" 
+            color="#2d2d44"
+            material="roughness: 0.9">
+        </a-plane>
+        
+        <!-- Grid de referencia (guía visual) -->
+        <a-entity id="visual-guide-grid">
+            <a-entity 
+                geometry="primitive: plane; width: 50; height: 50"
+                material="color: #3d3d5c; opacity: 0.3; transparent: true; wireframe: true"
+                position="0 0.01 0"
+                rotation="-90 0 0">
+            </a-entity>
+        </a-entity>
+        
+        <!-- Zona de enfoque (spotlight) -->
+        <a-entity id="focus-zone" visible="false">
+            <a-cylinder 
+                position="0 0.02 -4"
+                radius="3"
+                height="0.05"
+                material="color: #4ade80; opacity: 0.2; transparent: true">
+            </a-cylinder>
+        </a-entity>
+        
+        <!-- Objetos Interactivos -->
+        <a-entity id="interactive-objects">
+            
+            <!-- Objeto 1: Cubo informativo -->
+            <a-entity id="object-1" class="interactive scene-object" position="-2 1.5 -4"
+                      data-info="Cubo de Información" data-description="Este es un elemento interactivo básico">
+                <a-box 
+                    color="#3b82f6"
+                    width="0.8" height="0.8" depth="0.8"
+                    material="roughness: 0.5; metalness: 0.2"
+                    animation="property: rotation; to: 0 360 0; dur: 8000; loop: true; easing: linear">
+                </a-box>
+                <a-text 
+                    value="Info" 
+                    position="0 0.7 0" 
+                    align="center" 
+                    color="#fff"
+                    scale="0.5 0.5 0.5">
+                </a-text>
+                <!-- Indicador visual de interactividad -->
+                <a-ring 
+                    class="interaction-ring"
+                    position="0 -0.6 0"
+                    rotation="-90 0 0"
+                    radius-inner="0.3"
+                    radius-outer="0.5"
+                    color="#3b82f6"
+                    material="opacity: 0.5; transparent: true"
+                    animation="property: scale; from: 1 1 1; to: 1.2 1.2 1.2; dur: 1000; loop: true; dir: alternate">
+                </a-ring>
+            </a-entity>
+            
+            <!-- Objeto 2: Esfera de navegación -->
+            <a-entity id="object-2" class="interactive scene-object" position="2 1.2 -4"
+                      data-info="Esfera de Navegación" data-description="Controla la dirección del recorrido">
+                <a-sphere 
+                    color="#10b981"
+                    radius="0.5"
+                    material="roughness: 0.3; metalness: 0.4"
+                    animation="property: position; from: 2 1.2 -4; to: 2 1.6 -4; dur: 2000; loop: true; dir: alternate; easing: easeInOutQuad">
+                </a-sphere>
+                <a-text 
+                    value="Nav" 
+                    position="0 0.8 0" 
+                    align="center" 
+                    color="#fff"
+                    scale="0.5 0.5 0.5">
+                </a-text>
+                <a-ring 
+                    class="interaction-ring"
+                    position="0 -0.8 0"
+                    rotation="-90 0 0"
+                    radius-inner="0.3"
+                    radius-outer="0.5"
+                    color="#10b981"
+                    material="opacity: 0.5; transparent: true"
+                    animation="property: scale; from: 1 1 1; to: 1.2 1.2 1.2; dur: 1000; loop: true; dir: alternate">
+                </a-ring>
+            </a-entity>
+            
+            <!-- Objeto 3: Cilindro de configuración -->
+            <a-entity id="object-3" class="interactive scene-object" position="0 1 -6"
+                      data-info="Configuración" data-description="Ajusta los parámetros del sistema">
+                <a-cylinder 
+                    color="#f59e0b"
+                    radius="0.4"
+                    height="1"
+                    material="roughness: 0.4; metalness: 0.3"
+                    animation="property: rotation; to: 0 360 0; dur: 6000; loop: true; easing: linear">
+                </a-cylinder>
+                <a-text 
+                    value="Config" 
+                    position="0 0.8 0" 
+                    align="center" 
+                    color="#fff"
+                    scale="0.5 0.5 0.5">
+                </a-text>
+                <a-ring 
+                    class="interaction-ring"
+                    position="0 -0.6 0"
+                    rotation="-90 0 0"
+                    radius-inner="0.3"
+                    radius-outer="0.5"
+                    color="#f59e0b"
+                    material="opacity: 0.5; transparent: true">
+                </a-ring>
+            </a-entity>
+            
+            <!-- Objeto 4: Torus de ayuda -->
+            <a-entity id="object-4" class="interactive scene-object" position="-3 1.2 -6"
+                      data-info="Centro de Ayuda" data-description="Obtén asistencia contextual">
+                <a-torus 
+                    color="#8b5cf6"
+                    radius="0.4"
+                    radius-tubular="0.1"
+                    material="roughness: 0.3; metalness: 0.5"
+                    animation="property: rotation; from: 0 0 0; to: 360 360 0; dur: 10000; loop: true; easing: linear">
+                </a-torus>
+                <a-text 
+                    value="Ayuda" 
+                    position="0 0.7 0" 
+                    align="center" 
+                    color="#fff"
+                    scale="0.5 0.5 0.5">
+                </a-text>
+                <a-ring 
+                    class="interaction-ring"
+                    position="0 -0.5 0"
+                    rotation="-90 0 0"
+                    radius-inner="0.3"
+                    radius-outer="0.5"
+                    color="#8b5cf6"
+                    material="opacity: 0.5; transparent: true">
+                </a-ring>
+            </a-entity>
+            
+            <!-- Objeto 5: Cono de alerta -->
+            <a-entity id="object-5" class="interactive scene-object" position="3 1 -6"
+                      data-info="Alertas" data-description="Notificaciones importantes del sistema">
+                <a-cone 
+                    color="#ef4444"
+                    radius-bottom="0.4"
+                    radius-top="0"
+                    height="0.8"
+                    material="roughness: 0.5; metalness: 0.2"
+                    animation="property: rotation; to: 0 360 0; dur: 4000; loop: true; easing: linear">
+                </a-cone>
+                <a-text 
+                    value="Alertas" 
+                    position="0 0.7 0" 
+                    align="center" 
+                    color="#fff"
+                    scale="0.5 0.5 0.5">
+                </a-text>
+                <a-ring 
+                    class="interaction-ring"
+                    position="0 -0.5 0"
+                    rotation="-90 0 0"
+                    radius-inner="0.3"
+                    radius-outer="0.5"
+                    color="#ef4444"
+                    material="opacity: 0.5; transparent: true">
+                </a-ring>
+            </a-entity>
+            
+            <!-- Objeto 6: Dodecaedro de exploración -->
+            <a-entity id="object-6" class="interactive scene-object" position="0 1.5 -8"
+                      data-info="Explorador" data-description="Descubre nuevas áreas del entorno">
+                <a-dodecahedron 
+                    color="#ec4899"
+                    radius="0.5"
+                    material="roughness: 0.4; metalness: 0.4"
+                    animation="property: rotation; from: 0 0 0; to: 360 360 360; dur: 12000; loop: true; easing: linear">
+                </a-dodecahedron>
+                <a-text 
+                    value="Explorar" 
+                    position="0 0.8 0" 
+                    align="center" 
+                    color="#fff"
+                    scale="0.5 0.5 0.5">
+                </a-text>
+                <a-ring 
+                    class="interaction-ring"
+                    position="0 -0.7 0"
+                    rotation="-90 0 0"
+                    radius-inner="0.3"
+                    radius-outer="0.5"
+                    color="#ec4899"
+                    material="opacity: 0.5; transparent: true">
+                </a-ring>
+            </a-entity>
+            
+            <!-- Objetos adicionales (7-10) para demostrar reducción -->
+            <a-entity id="object-7" class="interactive scene-object" position="-4 1 -8"
+                      data-info="Archivo" data-description="Accede a documentos guardados">
+                <a-box color="#06b6d4" width="0.6" height="0.8" depth="0.4" material="roughness: 0.5">
+                </a-box>
+            </a-entity>
+            
+            <a-entity id="object-8" class="interactive scene-object" position="4 1 -8"
+                      data-info="Mensajes" data-description="Centro de comunicaciones">
+                <a-octahedron color="#84cc16" radius="0.4" material="roughness: 0.4">
+                </a-octahedron>
+            </a-entity>
+            
+            <a-entity id="object-9" class="interactive scene-object" position="-2 1.5 -10"
+                      data-info="Calendario" data-description="Gestiona tus eventos">
+                <a-box color="#f97316" width="0.7" height="0.7" depth="0.1" material="roughness: 0.5">
+                </a-box>
+            </a-entity>
+            
+            <a-entity id="object-10" class="interactive scene-object" position="2 1.5 -10"
+                      data-info="Estadísticas" data-description="Visualiza datos y métricas">
+                <a-tetrahedron color="#a855f7" radius="0.5" material="roughness: 0.4">
+                </a-tetrahedron>
+            </a-entity>
+            
+        </a-entity>
+        
+        <!-- Cámara y controles -->
+        <a-entity id="camera-rig" position="0 1.6 0">
+            <a-camera 
+                look-controls="pointerLockEnabled: false"
+                wasd-controls="acceleration: 30">
+                <a-cursor 
+                    color="#fff"
+                    fuse="false"
+                    raycaster="objects: .interactive">
+                </a-cursor>
+            </a-camera>
+        </a-entity>
+        
+    </a-scene>
+    
+    <!-- ============================================
+         JAVASCRIPT: LÓGICA DE ACCESIBILIDAD
+         ============================================ -->
+    <script>
+        // ============================================
+        // ESTADO GLOBAL DEL SISTEMA
+        // ============================================
+        const state = {
+            objectCount: 6,
+            colorIntensity: 100,
+            animationSpeed: 50,
+            ambientLight: 60,
+            fogDensity: 0,
+            audioCues: true,
+            hapticFeedback: true,
+            visualGuides: true,
+            reduceMotion: false
+        };
+        
+        // Contexto de audio
+        let audioContext = null;
+        
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            initAudio();
+            setupInteractiveObjects();
+            updateCognitiveLoadIndicator();
+            
+            // Aplicar estado inicial
+            updateObjectCount(state.objectCount);
+        });
+        
+        // ============================================
+        // SISTEMA DE AUDIO (Web Audio API)
+        // Implementación de señales auditivas para 
+        // feedback multimodal
+        // ============================================
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            } catch (e) {
+                console.warn('Web Audio API no soportada');
+            }
+        }
+        
+        function playTone(frequency, duration, type = 'sine') {
+            if (!audioContext || !state.audioCues) return;
+            
+            // Resumir contexto si está suspendido
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = type;
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+            
+            // Envelope suave para evitar clicks
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.02);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+            
+            // Mostrar indicador visual
+            showFeedbackBadge('audio');
+        }
+        
+        function playHoverSound() {
+            playTone(440, 0.1, 'sine'); // La4, corto
+        }
+        
+        function playClickSound() {
+            playTone(523, 0.15, 'triangle'); // Do5, más largo
+        }
+        
+        function playSuccessSound() {
+            // Secuencia de tonos ascendente
+            playTone(523, 0.1);
+            setTimeout(() => playTone(659, 0.1), 100);
+            setTimeout(() => playTone(784, 0.15), 200);
+        }
+        
+        // ============================================
+        // SISTEMA HÁPTICO (Vibration API)
+        // Implementación de feedback táctil
+        // ============================================
+        function triggerHaptic(pattern = [50]) {
+            if (!state.hapticFeedback) return;
+            
+            if ('vibrate' in navigator) {
+                navigator.vibrate(pattern);
+                showFeedbackBadge('haptic');
+            }
+        }
+        
+        function hapticHover() {
+            triggerHaptic([30]);
+        }
+        
+        function hapticClick() {
+            triggerHaptic([50, 30, 50]);
+        }
+        
+        function hapticSuccess() {
+            triggerHaptic([100, 50, 100, 50, 150]);
+        }
+        
+        // ============================================
+        // CONFIGURACIÓN DE OBJETOS INTERACTIVOS
+        // ============================================
+        function setupInteractiveObjects() {
+            const objects = document.querySelectorAll('.interactive');
+            
+            objects.forEach(obj => {
+                // Evento de hover (mouseenter)
+                obj.addEventListener('mouseenter', () => {
+                    playHoverSound();
+                    hapticHover();
+                    
+                    // Escalar objeto
+                    const child = obj.querySelector('a-box, a-sphere, a-cylinder, a-torus, a-cone, a-dodecahedron, a-octahedron, a-tetrahedron');
+                    if (child) {
+                        child.setAttribute('animation__hover', {
+                            property: 'scale',
+                            to: '1.2 1.2 1.2',
+                            dur: 200,
+                            easing: 'easeOutQuad'
+                        });
+                    }
+                });
+                
+                // Evento de salida (mouseleave)
+                obj.addEventListener('mouseleave', () => {
+                    const child = obj.querySelector('a-box, a-sphere, a-cylinder, a-torus, a-cone, a-dodecahedron, a-octahedron, a-tetrahedron');
+                    if (child) {
+                        child.setAttribute('animation__hover', {
+                            property: 'scale',
+                            to: '1 1 1',
+                            dur: 200,
+                            easing: 'easeOutQuad'
+                        });
+                    }
+                });
+                
+                // Evento de click
+                obj.addEventListener('click', () => {
+                    playClickSound();
+                    hapticClick();
+                    
+                    const info = obj.dataset.info || 'Objeto';
+                    const description = obj.dataset.description || '';
+                    
+                    showObjectInfo(info, description);
+                });
+            });
+        }
+        
+        // ============================================
+        // CONTROL DE VISIBILIDAD DE OBJETOS
+        // Implementación de reducción de carga extrínseca
+        // ============================================
+        function updateObjectCount(value) {
+            state.objectCount = parseInt(value);
+            document.getElementById('object-count-display').textContent = value;
+            
+            const objects = document.querySelectorAll('.scene-object');
+            objects.forEach((obj, index) => {
+                const objNum = index + 1;
+                if (objNum <= state.objectCount) {
+                    obj.setAttribute('visible', 'true');
+                    obj.classList.add('interactive');
+                } else {
+                    obj.setAttribute('visible', 'false');
+                    obj.classList.remove('interactive');
+                }
+            });
+            
+            updateCognitiveLoadIndicator();
+        }
+        
+        // ============================================
+        // CONTROL DE INTENSIDAD DE COLOR
+        // Reducción de estimulación visual
+        // ============================================
+        function updateColorIntensity(value) {
+            state.colorIntensity = parseInt(value);
+            document.getElementById('color-intensity-display').textContent = value + '%';
+            
+            const saturation = value / 100;
+            const objects = document.querySelectorAll('.scene-object');
+            
+            objects.forEach(obj => {
+                const child = obj.querySelector('a-box, a-sphere, a-cylinder, a-torus, a-cone, a-dodecahedron, a-octahedron, a-tetrahedron');
+                if (child) {
+                    const currentColor = child.getAttribute('color') || '#ffffff';
+                    const desaturatedColor = adjustColorSaturation(currentColor, saturation);
+                    child.setAttribute('material', `color: ${desaturatedColor}; roughness: 0.5`);
+                }
+            });
+            
+            updateCognitiveLoadIndicator();
+        }
+        
+        function adjustColorSaturation(hexColor, saturation) {
+            // Convertir hex a HSL, ajustar saturación, volver a hex
+            let r = parseInt(hexColor.slice(1, 3), 16) / 255;
+            let g = parseInt(hexColor.slice(3, 5), 16) / 255;
+            let b = parseInt(hexColor.slice(5, 7), 16) / 255;
+            
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+                    case g: h = ((b - r) / d + 2) / 6; break;
+                    case b: h = ((r - g) / d + 4) / 6; break;
+                }
+            }
+            
+            // Ajustar saturación
+            s = s * saturation;
+            
+            // HSL a RGB
+            function hue2rgb(p, q, t) {
+                if (t < 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t < 1/6) return p + (q - p) * 6 * t;
+                if (t < 1/2) return q;
+                if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                return p;
+            }
+            
+            let r2, g2, b2;
+            if (s === 0) {
+                r2 = g2 = b2 = l;
+            } else {
+                const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                const p = 2 * l - q;
+                r2 = hue2rgb(p, q, h + 1/3);
+                g2 = hue2rgb(p, q, h);
+                b2 = hue2rgb(p, q, h - 1/3);
+            }
+            
+            const toHex = x => {
+                const hex = Math.round(x * 255).toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            };
+            
+            return `#${toHex(r2)}${toHex(g2)}${toHex(b2)}`;
+        }
+        
+        // ============================================
+        // CONTROL DE VELOCIDAD DE ANIMACIÓN
+        // ============================================
+        function updateAnimationSpeed(value) {
+            state.animationSpeed = parseInt(value);
+            const speedMultiplier = value / 50; // 50 = velocidad normal (1x)
+            document.getElementById('animation-speed-display').textContent = speedMultiplier.toFixed(1) + 'x';
+            
+            const objects = document.querySelectorAll('.scene-object');
+            objects.forEach(obj => {
+                const animatedElements = obj.querySelectorAll('[animation]');
+                animatedElements.forEach(el => {
+                    const anim = el.getAttribute('animation');
+                    if (anim && anim.dur) {
+                        const baseDuration = parseInt(anim.dur);
+                        const newDuration = speedMultiplier > 0 ? baseDuration / speedMultiplier : 999999;
+                        el.setAttribute('animation', {...anim, dur: newDuration});
+                    }
+                });
+            });
+            
+            updateCognitiveLoadIndicator();
+        }
+        
+        // ============================================
+        // CONTROL DE ILUMINACIÓN AMBIENTAL
+        // ============================================
+        function updateAmbientLight(value) {
+            state.ambientLight = parseInt(value);
+            document.getElementById('ambient-light-display').textContent = value + '%';
+            
+            const ambientLight = document.getElementById('ambient-light-entity');
+            ambientLight.setAttribute('light', `type: ambient; color: #BBB; intensity: ${value / 100}`);
+            
+            updateCognitiveLoadIndicator();
+        }
+        
+        // ============================================
+        // CONTROL DE NIEBLA (PROFUNDIDAD VISUAL)
+        // ============================================
+        function updateFogDensity(value) {
+            state.fogDensity = parseInt(value);
+            document.getElementById('fog-density-display').textContent = value + '%';
+            
+            const scene = document.getElementById('main-scene');
+            const density = value / 1000; // Escala apropiada para la niebla
+            scene.setAttribute('fog', `type: exponential; color: #1a1a2e; density: ${density}`);
+            
+            updateCognitiveLoadIndicator();
+        }
+        
+        // ============================================
+        // TOGGLES DE ASISTENCIA MULTIMODAL
+        // ============================================
+        function toggleAudioCues(enabled) {
+            state.audioCues = enabled;
+            if (enabled) {
+                playSuccessSound();
+            }
+            updateCognitiveLoadIndicator();
+        }
+        
+        function toggleHapticFeedback(enabled) {
+            state.hapticFeedback = enabled;
+            if (enabled) {
+                hapticSuccess();
+            }
+            updateCognitiveLoadIndicator();
+        }
+        
+        function toggleVisualGuides(enabled) {
+            state.visualGuides = enabled;
+            const grid = document.getElementById('visual-guide-grid');
+            grid.setAttribute('visible', enabled);
+            
+            const rings = document.querySelectorAll('.interaction-ring');
+            rings.forEach(ring => ring.setAttribute('visible', enabled));
+            
+            updateCognitiveLoadIndicator();
+        }
+        
+        function toggleReduceMotion(enabled) {
+            state.reduceMotion = enabled;
+            
+            const objects = document.querySelectorAll('.scene-object');
+            objects.forEach(obj => {
+                const animatedElements = obj.querySelectorAll('[animation]');
+                animatedElements.forEach(el => {
+                    if (enabled) {
+                        el.removeAttribute('animation');
+                    }
+                });
+            });
+            
+            if (enabled) {
+                document.getElementById('animation-speed').value = 0;
+                document.getElementById('animation-speed-display').textContent = '0x';
+                state.animationSpeed = 0;
+            }
+            
+            updateCognitiveLoadIndicator();
+        }
+        
+        // ============================================
+        // PRESETS DE ACCESIBILIDAD
+        // Configuraciones optimizadas para diferentes perfiles
+        // ============================================
+        function applyPreset(preset) {
+            switch(preset) {
+                case 'calm':
+                    // Perfil de calma: mínimos estímulos
+                    updateSlider('object-count', 3);
+                    updateSlider('color-intensity', 50);
+                    updateSlider('animation-speed', 20);
+                    updateSlider('ambient-light', 40);
+                    updateSlider('fog-density', 30);
+                    setToggle('reduce-motion', true);
+                    setToggle('audio-cues', false);
+                    playSuccessSound();
+                    break;
+                    
+                case 'focus':
+                    // Perfil de enfoque: elementos clave visibles
+                    updateSlider('object-count', 4);
+                    updateSlider('color-intensity', 80);
+                    updateSlider('animation-speed', 30);
+                    updateSlider('ambient-light', 70);
+                    updateSlider('fog-density', 50);
+                    setToggle('visual-guides', true);
+                    setToggle('audio-cues', true);
+                    document.getElementById('focus-zone').setAttribute('visible', 'true');
+                    playSuccessSound();
+                    break;
+                    
+                case 'highContrast':
+                    // Perfil de alto contraste
+                    updateSlider('object-count', 6);
+                    updateSlider('color-intensity', 100);
+                    updateSlider('animation-speed', 50);
+                    updateSlider('ambient-light', 90);
+                    updateSlider('fog-density', 0);
+                    setToggle('visual-guides', true);
+                    document.getElementById('sky').setAttribute('color', '#000000');
+                    document.getElementById('ground').setAttribute('color', '#1a1a1a');
+                    playSuccessSound();
+                    break;
+                    
+                case 'default':
+                    // Restaurar valores por defecto
+                    updateSlider('object-count', 6);
+                    updateSlider('color-intensity', 100);
+                    updateSlider('animation-speed', 50);
+                    updateSlider('ambient-light', 60);
+                    updateSlider('fog-density', 0);
+                    setToggle('audio-cues', true);
+                    setToggle('haptic-feedback', true);
+                    setToggle('visual-guides', true);
+                    setToggle('reduce-motion', false);
+                    document.getElementById('sky').setAttribute('color', '#1a1a2e');
+                    document.getElementById('ground').setAttribute('color', '#2d2d44');
+                    document.getElementById('focus-zone').setAttribute('visible', 'false');
+                    playSuccessSound();
+                    break;
+            }
+            
+            hapticSuccess();
+        }
+        
+        function updateSlider(id, value) {
+            const slider = document.getElementById(id);
+            slider.value = value;
+            
+            // Disparar el evento oninput manualmente
+            switch(id) {
+                case 'object-count': updateObjectCount(value); break;
+                case 'color-intensity': updateColorIntensity(value); break;
+                case 'animation-speed': updateAnimationSpeed(value); break;
+                case 'ambient-light': updateAmbientLight(value); break;
+                case 'fog-density': updateFogDensity(value); break;
+            }
+        }
+        
+        function setToggle(id, value) {
+            const toggle = document.getElementById(id);
+            toggle.checked = value;
+            
+            switch(id) {
+                case 'audio-cues': toggleAudioCues(value); break;
+                case 'haptic-feedback': toggleHapticFeedback(value); break;
+                case 'visual-guides': toggleVisualGuides(value); break;
+                case 'reduce-motion': toggleReduceMotion(value); break;
+            }
+        }
+        
+        // ============================================
+        // INDICADOR DE CARGA COGNITIVA
+        // Estimación basada en parámetros actuales
+        // ============================================
+        function updateCognitiveLoadIndicator() {
+            // Fórmula de estimación de carga cognitiva
+            // Basada en: objetos visibles, intensidad de color, velocidad, etc.
+            
+            let load = 0;
+            
+            // Objetos visibles (peso alto)
+            load += (state.objectCount / 10) * 30;
+            
+            // Intensidad de color
+            load += (state.colorIntensity / 100) * 15;
+            
+            // Velocidad de animación
+            load += (state.animationSpeed / 100) * 20;
+            
+            // Iluminación (muy alta o muy baja aumenta carga)
+            const lightDeviation = Math.abs(state.ambientLight - 60) / 40;
+            load += lightDeviation * 10;
+            
+            // Niebla (reduce elementos visibles, reduce carga)
+            load -= (state.fogDensity / 100) * 10;
+            
+            // Asistencia multimodal (reduce carga al distribuir información)
+            if (state.audioCues) load -= 5;
+            if (state.hapticFeedback) load -= 5;
+            if (state.visualGuides) load -= 5;
+            if (state.reduceMotion) load -= 10;
+            
+            // Normalizar entre 0 y 100
+            load = Math.max(0, Math.min(100, load));
+            
+            // Actualizar UI
+            const meterFill = document.getElementById('load-meter-fill');
+            const loadStatus = document.getElementById('load-status');
+            
+            meterFill.style.width = load + '%';
+            
+            let color, status;
+            if (load < 30) {
+                color = '#10b981'; // Verde
+                status = '✓ Carga baja - Óptimo para neurodiversidad';
+            } else if (load < 60) {
+                color = '#f59e0b'; // Amarillo
+                status = '⚠ Carga moderada - Aceptable';
+            } else {
+                color = '#ef4444'; // Rojo
+                status = '⚠ Carga alta - Considere reducir estímulos';
+            }
+            
+            meterFill.style.background = color;
+            loadStatus.textContent = status;
+            loadStatus.style.color = color;
+        }
+        
+        // ============================================
+        // UI HELPERS
+        // ============================================
+        function togglePanel() {
+            const panel = document.getElementById('accessibility-panel');
+            panel.classList.toggle('collapsed');
+        }
+        
+        function showFeedbackBadge(type) {
+            const badge = document.getElementById(type === 'audio' ? 'audio-badge' : 'haptic-badge');
+            badge.classList.add('active');
+            setTimeout(() => badge.classList.remove('active'), 500);
+        }
+        
+        function showObjectInfo(title, description) {
+            // Crear notificación temporal
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(30, 30, 40, 0.95);
+                padding: 24px 32px;
+                border-radius: 12px;
+                color: white;
+                text-align: center;
+                z-index: 3000;
+                animation: fadeIn 0.3s ease;
+            `;
+            notification.innerHTML = `
+                <h3 style="margin: 0 0 8px 0; font-size: 18px;">${title}</h3>
+                <p style="margin: 0; color: #9ca3af; font-size: 14px;">${description}</p>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+        
+        function showHelp() {
+            document.getElementById('help-overlay').classList.add('visible');
+            document.getElementById('help-tooltip').classList.add('visible');
+        }
+        
+        function hideHelp() {
+            document.getElementById('help-overlay').classList.remove('visible');
+            document.getElementById('help-tooltip').classList.remove('visible');
+        }
+        
+        // ============================================
+        // KEYBOARD SHORTCUTS
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case '1': applyPreset('calm'); break;
+                case '2': applyPreset('focus'); break;
+                case '3': applyPreset('highContrast'); break;
+                case '0': applyPreset('default'); break;
+                case 'h':
+                case 'H':
+                    if (document.getElementById('help-tooltip').classList.contains('visible')) {
+                        hideHelp();
+                    } else {
+                        showHelp();
+                    }
+                    break;
+                case 'Escape':
+                    hideHelp();
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>
