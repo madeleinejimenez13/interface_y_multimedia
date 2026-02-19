@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>E-Waste XR — Núcleo de Interacción XR Pro</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --neon-green: #00ff88;
+      --acid-yellow: #e8ff00;
+      --toxic-red: #ff2d55;
+      --deep-bg: #030a06;
+      --panel-bg: rgba(3, 10, 6, 0.92);
+      --text: #c8ffd4;
+      --muted: #5a7a62;
+    }
+
+    body {
+      background: var(--deep-bg);
+      font-family: 'Space Mono', monospace;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* ── CANVAS ── */
+    #scene-canvas {
+      position: fixed;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── HUD TOP BAR ── */
+    #hud-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 48px;
+      background: rgba(0,0,0,0.7);
+      border-bottom: 1px solid var(--neon-green);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 20px;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    #hud-bar .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--neon-green);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    #hud-bar .sep { flex: 1; }
+    #fps-counter {
+      font-size: 11px;
+      color: var(--acid-yellow);
+      background: rgba(232,255,0,0.08);
+      border: 1px solid rgba(232,255,0,0.3);
+      padding: 3px 10px;
+      border-radius: 3px;
+    }
+    #btn-accessibility {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      background: transparent;
+      border: 1px solid var(--neon-green);
+      color: var(--neon-green);
+      padding: 6px 14px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+    #btn-accessibility:hover {
+      background: var(--neon-green);
+      color: var(--deep-bg);
+    }
+
+    /* ── GAZE PROGRESS RING ── */
+    #gaze-hud {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      z-index: 100;
+      pointer-events: none;
+    }
+    #gaze-ring-container {
+      position: relative;
+      width: 56px;
+      height: 56px;
+    }
+    #gaze-ring-container svg {
+      transform: rotate(-90deg);
+    }
+    #gaze-ring-bg { stroke: rgba(0,255,136,0.15); }
+    #gaze-ring-fill {
+      stroke: var(--neon-green);
+      stroke-dasharray: 138;
+      stroke-dashoffset: 138;
+      transition: stroke-dashoffset 0.2s linear;
+      filter: drop-shadow(0 0 4px var(--neon-green));
+    }
+    #gaze-crosshair {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 8px; height: 8px;
+      border: 1.5px solid var(--neon-green);
+      border-radius: 50%;
+    }
+    #gaze-label {
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* ── INFO PANEL (Módulo A) ── */
+    #info-panel {
+      position: fixed;
+      top: 50%; right: 24px;
+      transform: translateY(-50%);
+      width: 280px;
+      background: var(--panel-bg);
+      border: 1px solid var(--neon-green);
+      border-radius: 4px;
+      padding: 20px;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      backdrop-filter: blur(12px);
+    }
+    #info-panel.visible { opacity: 1; pointer-events: auto; }
+    #info-panel .panel-tag {
+      font-size: 9px;
+      color: var(--neon-green);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      opacity: 0.7;
+    }
+    #info-panel h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    #info-panel p {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    #info-panel .stat-row {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid rgba(0,255,136,0.1);
+      padding-top: 10px;
+      margin-top: 4px;
+    }
+    #info-panel .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    #info-panel .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--acid-yellow);
+    }
+    #info-panel .stat-label {
+      font-size: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    #close-panel {
+      position: absolute;
+      top: 12px; right: 12px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 16px;
+      cursor: pointer;
+      line-height: 1;
+    }
+    #close-panel:hover { color: var(--toxic-red); }
+
+    /* ── ACCESSIBILITY MENU (Módulo B) ── */
+    #accessibility-menu {
+      position: fixed;
+      top: 60px; right: 24px;
+      width: 300px;
+      background: var(--panel-bg);
+      border: 1px solid rgba(0,255,136,0.5);
+      border-radius: 4px;
+      z-index: 300;
+      display: none;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 0 40px rgba(0,255,136,0.1);
+    }
+    #accessibility-menu.open { display: block; }
+    .acc-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(0,255,136,0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .acc-header h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .acc-header button {
+      background: none; border: none;
+      color: var(--muted); cursor: pointer; font-size: 16px;
+    }
+    .acc-header button:hover { color: var(--toxic-red); }
+    .acc-section {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(0,255,136,0.08);
+    }
+    .acc-section:last-child { border-bottom: none; }
+    .acc-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .acc-option:last-child { margin-bottom: 0; }
+    .acc-option-info { display: flex; flex-direction: column; gap: 2px; }
+    .acc-option-title {
+      font-size: 12px;
+      color: var(--text);
+      font-weight: 700;
+    }
+    .acc-option-desc {
+      font-size: 10px;
+      color: var(--muted);
+    }
+    /* Toggle switch */
+    .toggle {
+      position: relative;
+      width: 40px; height: 22px;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 22px;
+      transition: 0.3s;
+    }
+    .slider::before {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--muted);
+      top: 2px; left: 2px;
+      transition: 0.3s;
+    }
+    .toggle input:checked + .slider { background: rgba(0,255,136,0.2); border-color: var(--neon-green); }
+    .toggle input:checked + .slider::before { background: var(--neon-green); transform: translateX(18px); }
+    .wcag-badge {
+      display: inline-block;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 2px;
+      background: rgba(0,255,136,0.1);
+      border: 1px solid rgba(0,255,136,0.3);
+      color: var(--neon-green);
+      margin-top: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── SPATIAL SUBTITLE (Módulo B) ── */
+    #spatial-subtitle {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.88);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 4px;
+      padding: 8px 20px;
+      font-size: 13px;
+      color: #fff;
+      letter-spacing: 0.03em;
+      max-width: 600px;
+      text-align: center;
+      display: none;
+      z-index: 200;
+      backdrop-filter: blur(8px);
+    }
+    #spatial-subtitle.active { display: block; }
+
+    /* ── HIGH CONTRAST OVERLAY (Módulo B) ── */
+    body.high-contrast {
+      --neon-green: #ffffff;
+      --acid-yellow: #ffff00;
+      --toxic-red: #ff0000;
+      --deep-bg: #000000;
+      --panel-bg: rgba(0,0,0,0.98);
+      --text: #ffffff;
+      --muted: #aaaaaa;
+    }
+    body.high-contrast #scene-canvas { filter: contrast(1.8) grayscale(0.3); }
+
+    /* ── NOTIFICATION TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 24px; left: 24px;
+      background: rgba(0,255,136,0.12);
+      border: 1px solid var(--neon-green);
+      color: var(--neon-green);
+      font-size: 11px;
+      padding: 10px 16px;
+      border-radius: 3px;
+      z-index: 500;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      max-width: 260px;
+      pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── PERFORMANCE INDICATOR ── */
+    #perf-panel {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      font-size: 10px;
+      color: var(--muted);
+      text-align: right;
+      z-index: 100;
+      line-height: 1.7;
+    }
+    #perf-panel span { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<canvas id="scene-canvas"></canvas>
+
+<!-- HUD Top Bar -->
+<div id="hud-bar">
+  <div class="logo">⬡ E-Waste XR Pro</div>
+  <div class="sep"></div>
+  <div id="fps-counter">FPS: --</div>
+  <button id="btn-accessibility" aria-label="Abrir menú de accesibilidad">
+    ♿ Accesibilidad
+  </button>
+</div>
+
+<!-- Gaze HUD -->
+<div id="gaze-hud" aria-hidden="true">
+  <div id="gaze-ring-container">
+    <svg width="56" height="56" viewBox="0 0 56 56">
+      <circle class="gaze-ring-bg" id="gaze-ring-bg" cx="28" cy="28" r="22" fill="none" stroke-width="3"/>
+      <circle id="gaze-ring-fill" cx="28" cy="28" r="22" fill="none" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <div id="gaze-crosshair"></div>
+  </div>
+  <div id="gaze-label">Fijar mirada</div>
+</div>
+
+<!-- Info Panel (aparece con gaze) -->
+<div id="info-panel" role="dialog" aria-label="Información del punto de impacto">
+  <button id="close-panel" aria-label="Cerrar panel">✕</button>
+  <div class="panel-tag">Zona crítica detectada</div>
+  <h3 id="panel-title">Acumulación de E-Waste</h3>
+  <p id="panel-body">Este punto concentra desechos electrónicos de alta toxicidad. Plomo, mercurio y cadmio se filtran al suelo degradando ecosistemas locales a una tasa alarmante.</p>
+  <div class="stat-row">
+    <div class="stat">
+      <div class="stat-value">2.4M</div>
+      <div class="stat-label">Ton/año</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">40%</div>
+      <div class="stat-label">Reciclable</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">12km²</div>
+      <div class="stat-label">Área afectada</div>
+    </div>
+  </div>
+</div>
+
+<!-- Accessibility Menu (Módulo B) -->
+<div id="accessibility-menu" role="dialog" aria-label="Preferencias XR de accesibilidad">
+  <div class="acc-header">
+    <h4>Preferencias XR</h4>
+    <button id="close-acc" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="acc-section">
+    <div class="acc-option">
+      <div class="acc-option-info">
+        <div class="acc-option-title">Alto Contraste</div>
+        <div class="acc-option-desc">Maximiza contraste visual para baja visión</div>
+        <span class="wcag-badge">WCAG 1.4.3 — Contraste mínimo</span>
+      </div>
+      <label class="toggle" aria-label="Activar modo alto contraste">
+        <input type="checkbox" id="toggle-contrast"/>
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="acc-option">
+      <div class="acc-option-info">
+        <div class="acc-option-title">Subtítulos Espaciales</div>
+        <div class="acc-option-desc">Texto en pantalla sincronizado con audio</div>
+        <span class="wcag-badge">WCAG 1.2.2 — Subtítulos</span>
+      </div>
+      <label class="toggle" aria-label="Activar subtítulos espaciales">
+        <input type="checkbox" id="toggle-subtitles"/>
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="acc-option">
+      <div class="acc-option-info">
+        <div class="acc-option-title">Reducir Movimiento</div>
+        <div class="acc-option-desc">Minimiza animaciones para fotosensibilidad</div>
+        <span class="wcag-badge">WCAG 2.3.3 — Animación bajo solicitud</span>
+      </div>
+      <label class="toggle" aria-label="Activar reducción de movimiento">
+        <input type="checkbox" id="toggle-motion"/>
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<!-- Spatial Subtitle -->
+<div id="spatial-subtitle" role="status" aria-live="polite"></div>
+
+<!-- Toast notification -->
+<div id="toast" role="alert" aria-live="assertive"></div>
+
+<!-- Performance Panel -->
+<div id="perf-panel" aria-hidden="true">
+  Polígonos: <span id="tri-count">--</span><br/>
+  Draw calls: <span id="draw-calls">--</span>
+</div>
+
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   NÚCLEO XR PRO — Three.js
+   Módulo A: Narrativa dinámica + Raycasting
+   Módulo B: Accesibilidad Universal (WCAG)
+   Módulo C: Optimización y Rendimiento (60 FPS)
+═══════════════════════════════════════════════════════ */
+
+// ─── SETUP RENDERER ───────────────────────────────────
+const canvas = document.getElementById('scene-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // Módulo C: limita pixel ratio
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.9;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x030a06, 0.04);
+
+const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 200);
+camera.position.set(0, 2.5, 12);
+camera.lookAt(0, 0, 0);
+
+// ─── MÓDULO C: GEOMETRÍAS OPTIMIZADAS (bajo poly) ─────
+// Usamos geometrías simples para mantener 60 FPS en móvil
+
+// Suelo
+const groundGeo = new THREE.PlaneGeometry(60, 60, 1, 1); // mínimo subdivisions
+const groundMat = new THREE.MeshLambertMaterial({ color: 0x0a1a0e }); // Lambert vs Phong = más rápido
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// Grid helper como referencia visual optimizada
+const grid = new THREE.GridHelper(60, 30, 0x0d2e15, 0x0d2e15);
+grid.position.y = 0.01;
+scene.add(grid);
+
+// ─── ZONA CRÍTICA DE E-WASTE (Módulo A) ───────────────
+const wasteZoneGroup = new THREE.Group();
+scene.add(wasteZoneGroup);
+
+// Residuos: cubos comprimidos con bajo poly
+const wasteColors = [0x2a5c35, 0x1a3d22, 0x3d7048, 0x152d1c];
+const wasteItems = [];
+for (let i = 0; i < 18; i++) {
+  const w = 0.3 + Math.random() * 0.7;
+  const h = 0.2 + Math.random() * 0.8;
+  const geo = new THREE.BoxGeometry(w, h, w, 1, 1, 1);
+  const mat = new THREE.MeshLambertMaterial({ color: wasteColors[Math.floor(Math.random() * wasteColors.length)] });
+  const mesh = new THREE.Mesh(geo, mat);
+  const angle = Math.random() * Math.PI * 2;
+  const radius = 0.5 + Math.random() * 2.5;
+  mesh.position.set(Math.cos(angle) * radius, h / 2, Math.sin(angle) * radius);
+  mesh.rotation.y = Math.random() * Math.PI;
+  mesh.castShadow = true;
+  wasteZoneGroup.add(mesh);
+  wasteItems.push(mesh);
+}
+
+// Cilindro central (foco de acumulación) - Módulo C: 8 segmentos máx.
+const focalGeo = new THREE.CylinderGeometry(0.4, 0.6, 1.8, 8, 1);
+const focalMat = new THREE.MeshLambertMaterial({ color: 0xff2d55 });
+const focalMesh = new THREE.Mesh(focalGeo, focalMat);
+focalMesh.position.set(0, 0.9, 0);
+focalMesh.castShadow = true;
+wasteZoneGroup.add(focalMesh);
+
+// Zona de detección (invisible) para Raycasting
+const hitZoneGeo = new THREE.CylinderGeometry(3.5, 3.5, 4, 8, 1);
+const hitZoneMat = new THREE.MeshBasicMaterial({ visible: false });
+const hitZone = new THREE.Mesh(hitZoneGeo, hitZoneMat);
+hitZone.position.set(0, 2, 0);
+hitZone.userData.isWasteZone = true;
+wasteZoneGroup.add(hitZone);
+
+// Partículas de polución (optimizadas - Points geometry)
+const particleCount = 120; // Módulo C: número controlado
+const particleGeo = new THREE.BufferGeometry();
+const positions = new Float32Array(particleCount * 3);
+for (let i = 0; i < particleCount; i++) {
+  positions[i * 3] = (Math.random() - 0.5) * 6;
+  positions[i * 3 + 1] = Math.random() * 4;
+  positions[i * 3 + 2] = (Math.random() - 0.5) * 6;
+}
+particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+const particleMat = new THREE.PointsMaterial({ color: 0x00ff88, size: 0.06, sizeAttenuation: true, transparent: true, opacity: 0.4 });
+const particles = new THREE.Points(particleGeo, particleMat);
+wasteZoneGroup.add(particles);
+
+// ─── ESTRUCTURAS DE ENTORNO ────────────────────────────
+// Racks de servidores (bajo poly: 6 caras cada uno)
+function makeServer(x, z) {
+  const g = new THREE.BoxGeometry(0.8, 2.2, 0.5, 1, 1, 1);
+  const m = new THREE.MeshLambertMaterial({ color: 0x0f1f15 });
+  const mesh = new THREE.Mesh(g, m);
+  mesh.position.set(x, 1.1, z);
+  mesh.castShadow = true;
+  scene.add(mesh);
+  // Luz LED pequeña por servidor
+  const ledGeo = new THREE.BoxGeometry(0.04, 0.04, 0.02);
+  const ledMat = new THREE.MeshBasicMaterial({ color: Math.random() > 0.5 ? 0x00ff00 : 0xff4400 });
+  const led = new THREE.Mesh(ledGeo, ledMat);
+  led.position.set(x + 0.3, 1.5 + Math.random() * 0.5, z - 0.26);
+  scene.add(led);
+}
+for (let i = -3; i <= 3; i += 1.5) { makeServer(i - 7, -5); makeServer(i + 7, -5); }
+
+// ─── ILUMINACIÓN (Módulo A: dinámica) ──────────────────
+const ambientLight = new THREE.AmbientLight(0x0a1a0e, 0.8);
+scene.add(ambientLight);
+
+const dirLight = new THREE.DirectionalLight(0x40ff80, 0.5);
+dirLight.position.set(10, 20, 10);
+dirLight.castShadow = true;
+dirLight.shadow.mapSize.set(512, 512); // Módulo C: mapa de sombras reducido
+dirLight.shadow.camera.near = 0.5;
+dirLight.shadow.camera.far = 50;
+scene.add(dirLight);
+
+// Luz de foco ambiental (se activa en Módulo A)
+const spotLight = new THREE.SpotLight(0xffffff, 0, 20, Math.PI / 6, 0.4, 1.5);
+spotLight.position.set(0, 12, 0);
+spotLight.target.position.set(0, 0, 0);
+spotLight.castShadow = false;
+scene.add(spotLight);
+scene.add(spotLight.target);
+
+// Punto de luz rojo de advertencia
+const warnLight = new THREE.PointLight(0xff2d55, 0, 6);
+warnLight.position.set(0, 2, 0);
+scene.add(warnLight);
+
+// ─── RAYCASTER (Módulo A) ──────────────────────────────
+const raycaster = new THREE.Raycaster();
+const screenCenter = new THREE.Vector2(0, 0); // centro de pantalla
+
+let gazeTarget = null;
+let gazeTimer = 0;
+const GAZE_THRESHOLD = 10; // 10 segundos
+let gazeFired = false;
+let panelVisible = false;
+
+// ─── MÓDULO A: ESTADO DE ILUMINACIÓN ──────────────────
+let lightState = 'normal'; // 'normal' | 'focused'
+let focusProgress = 0; // 0 → 1 interpolación suave
+
+function updateLighting(delta) {
+  if (lightState === 'focused') {
+    focusProgress = Math.min(1, focusProgress + delta * 0.8);
+  } else {
+    focusProgress = Math.max(0, focusProgress - delta * 0.5);
+  }
+  // Interpolación suave (evita cambios bruscos)
+  spotLight.intensity = THREE.MathUtils.lerp(0, 3.5, focusProgress);
+  warnLight.intensity = THREE.MathUtils.lerp(0, 2, focusProgress);
+  ambientLight.intensity = THREE.MathUtils.lerp(0.8, 0.25, focusProgress);
+}
+
+// ─── GAZE UI ───────────────────────────────────────────
+const gazeRingFill = document.getElementById('gaze-ring-fill');
+const gazeLabel = document.getElementById('gaze-label');
+const circumference = 138;
+
+function updateGazeRing(progress) {
+  const offset = circumference - (progress * circumference);
+  gazeRingFill.style.strokeDashoffset = offset;
+}
+
+// ─── INFO PANEL LOGIC ─────────────────────────────────
+const infoPanel = document.getElementById('info-panel');
+document.getElementById('close-panel').addEventListener('click', () => {
+  infoPanel.classList.remove('visible');
+  panelVisible = false;
+  gazeFired = false;
+  gazeTimer = 0;
+  lightState = 'normal';
+  updateGazeRing(0);
+});
+
+// Datos por zona (expandible)
+const zoneData = {
+  ewaste: {
+    title: 'Acumulación de E-Waste',
+    body: 'Este punto concentra desechos electrónicos de alta toxicidad. Plomo, mercurio y cadmio se filtran al suelo degradando ecosistemas locales a una tasa alarmante.',
+  }
+};
+
+// ─── TOAST NOTIFICATIONS ──────────────────────────────
+const toast = document.getElementById('toast');
+let toastTimer = null;
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ─── MÓDULO B: ACCESIBILIDAD ───────────────────────────
+const accMenu = document.getElementById('accessibility-menu');
+document.getElementById('btn-accessibility').addEventListener('click', () => {
+  accMenu.classList.toggle('open');
+});
+document.getElementById('close-acc').addEventListener('click', () => {
+  accMenu.classList.remove('open');
+});
+
+// WCAG 1.4.3 — Alto Contraste
+document.getElementById('toggle-contrast').addEventListener('change', (e) => {
+  if (e.target.checked) {
+    document.body.classList.add('high-contrast');
+    // Actualiza materiales en escena
+    groundMat.color.set(0x000000);
+    focalMat.color.set(0xff0000);
+    wasteItems.forEach(m => m.material.color.set(0x333333));
+    showToast('✓ Modo alto contraste activado');
+  } else {
+    document.body.classList.remove('high-contrast');
+    groundMat.color.set(0x0a1a0e);
+    focalMat.color.set(0xff2d55);
+    wasteItems.forEach((m, i) => m.material.color.set(wasteColors[i % wasteColors.length]));
+    showToast('Modo alto contraste desactivado');
+  }
+});
+
+// WCAG 1.2.2 — Subtítulos Espaciales
+let subtitlesEnabled = false;
+const spatialSubtitle = document.getElementById('spatial-subtitle');
+const subtitleLines = [
+  'Sistema de detección activo. Identificando zonas de impacto ambiental...',
+  'Alerta: alta concentración de metales pesados en zona central.',
+  'Módulo de reciclaje disponible. Capacidad de recuperación: 40%.',
+  'Temperatura de zona supera umbral crítico: 38°C registrado.',
+];
+let subtitleIndex = 0;
+let subtitleInterval = null;
+
+document.getElementById('toggle-subtitles').addEventListener('change', (e) => {
+  subtitlesEnabled = e.target.checked;
+  if (subtitlesEnabled) {
+    spatialSubtitle.classList.add('active');
+    spatialSubtitle.textContent = subtitleLines[0];
+    subtitleInterval = setInterval(() => {
+      subtitleIndex = (subtitleIndex + 1) % subtitleLines.length;
+      spatialSubtitle.textContent = subtitleLines[subtitleIndex];
+    }, 4000);
+    showToast('✓ Subtítulos espaciales activados (WCAG 1.2.2)');
+  } else {
+    spatialSubtitle.classList.remove('active');
+    clearInterval(subtitleInterval);
+    showToast('Subtítulos espaciales desactivados');
+  }
+});
+
+// WCAG 2.3.3 — Reducción de movimiento
+let reduceMotion = false;
+document.getElementById('toggle-motion').addEventListener('change', (e) => {
+  reduceMotion = e.target.checked;
+  showToast(e.target.checked ? '✓ Movimiento reducido (WCAG 2.3.3)' : 'Animaciones completas activadas');
+});
+
+// ─── MÓDULO C: FPS COUNTER ────────────────────────────
+const fpsEl = document.getElementById('fps-counter');
+const triEl = document.getElementById('tri-count');
+const drawEl = document.getElementById('draw-calls');
+let fpsFrames = 0, fpsLast = performance.now();
+
+// ─── ANIMACIÓN PRINCIPAL ──────────────────────────────
+const clock = new THREE.Clock();
+let time = 0;
+
+// Órbita de cámara simple (sin librería para reducir dependencias)
+let camAngle = 0;
+let isDragging = false, lastX = 0;
+canvas.addEventListener('mousedown', e => { isDragging = true; lastX = e.clientX; });
+canvas.addEventListener('mouseup', () => isDragging = false);
+canvas.addEventListener('mousemove', e => {
+  if (isDragging && !reduceMotion) {
+    camAngle += (e.clientX - lastX) * 0.005;
+    lastX = e.clientX;
+  }
+});
+// Touch
+canvas.addEventListener('touchstart', e => { isDragging = true; lastX = e.touches[0].clientX; });
+canvas.addEventListener('touchend', () => isDragging = false);
+canvas.addEventListener('touchmove', e => {
+  if (!reduceMotion) {
+    camAngle += (e.touches[0].clientX - lastX) * 0.005;
+    lastX = e.touches[0].clientX;
+  }
+});
+
+function animate() {
+  requestAnimationFrame(animate);
+  const delta = clock.getDelta();
+  time += delta;
+
+  // FPS
+  fpsFrames++;
+  const now = performance.now();
+  if (now - fpsLast >= 500) {
+    const fps = Math.round(fpsFrames * 1000 / (now - fpsLast));
+    fpsEl.textContent = `FPS: ${fps}`;
+    fpsEl.style.color = fps >= 55 ? '#e8ff00' : fps >= 30 ? '#ff9900' : '#ff2d55';
+    fpsFrames = 0; fpsLast = now;
+    // Módulo C: stats
+    const info = renderer.info;
+    triEl.textContent = info.render.triangles.toLocaleString();
+    drawEl.textContent = info.render.calls;
+  }
+
+  // Cámara órbita
+  if (!isDragging && !reduceMotion) camAngle += delta * 0.08;
+  const camR = 13;
+  camera.position.x = Math.sin(camAngle) * camR;
+  camera.position.z = Math.cos(camAngle) * camR;
+  camera.position.y = 3.5 + Math.sin(time * 0.2) * 0.3;
+  camera.lookAt(0, 1, 0);
+
+  // ── MÓDULO A: RAYCASTING ────────────────────────────
+  raycaster.setFromCamera(screenCenter, camera);
+  const intersects = raycaster.intersectObjects([hitZone]);
+  const isGazing = intersects.length > 0;
+
+  if (isGazing && !gazeFired && !panelVisible) {
+    gazeTimer += delta;
+    updateGazeRing(gazeTimer / GAZE_THRESHOLD);
+    gazeLabel.textContent = `${Math.ceil(GAZE_THRESHOLD - gazeTimer)}s`;
+    lightState = 'focused';
+    if (gazeTimer >= GAZE_THRESHOLD) {
+      gazeFired = true;
+      panelVisible = true;
+      infoPanel.classList.add('visible');
+      showToast('⚠ Zona crítica identificada');
+      gazeLabel.textContent = 'Detectado';
+    }
+  } else if (!isGazing && !panelVisible) {
+    gazeTimer = Math.max(0, gazeTimer - delta * 2);
+    updateGazeRing(gazeTimer / GAZE_THRESHOLD);
+    gazeLabel.textContent = gazeTimer > 0 ? `${Math.ceil(GAZE_THRESHOLD - gazeTimer)}s` : 'Fijar mirada';
+    if (gazeTimer === 0) lightState = 'normal';
+  }
+
+  // ── MÓDULO A: ACTUALIZAR ILUMINACIÓN ───────────────
+  updateLighting(delta);
+
+  // ── ANIMACIONES (Módulo C: condicional a reduceMotion) ──
+  if (!reduceMotion) {
+    // Pulso del foco central
+    focalMesh.scale.y = 1 + Math.sin(time * 2) * 0.05;
+    // Partículas flotantes
+    const pos = particleGeo.attributes.position;
+    for (let i = 0; i < particleCount; i++) {
+      pos.array[i * 3 + 1] += 0.01;
+      if (pos.array[i * 3 + 1] > 4) pos.array[i * 3 + 1] = 0;
+    }
+    pos.needsUpdate = true;
+    // Residuos leve balanceo
+    wasteItems.forEach((w, i) => {
+      w.rotation.y += 0.002 * (i % 2 === 0 ? 1 : -1);
+    });
+  }
+
+  // Luz de advertencia pulsa
+  if (!reduceMotion) {
+    warnLight.intensity = THREE.MathUtils.lerp(0, 2, focusProgress) * (0.7 + Math.sin(time * 4) * 0.3);
+  }
+
+  renderer.render(scene, camera);
+}
+
+animate();
+
+// ─── RESIZE ───────────────────────────────────────────
+window.addEventListener('resize', () => {
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+});
+</script>
+</body>
+</html>

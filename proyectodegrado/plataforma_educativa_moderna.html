@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Plataforma educativa moderna para aprender Sistemas Operativos, Redes y Soporte Técnico">
+    <title>TechLearn - Plataforma Educativa Moderna</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header moderno */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveGrid 20s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Navegación moderna */
+        .nav {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid transparent;
+            color: var(--light);
+            padding: 0.8rem 1.8rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-color: transparent;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Container moderno */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Grid moderno */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        /* Cards glassmorphism */
+        .card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            filter: drop-shadow(0 0 20px currentColor);
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card p {
+            opacity: 0.8;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card ul {
+            list-style: none;
+            margin-top: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card li {
+            padding: 0.8rem 0;
+            padding-left: 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Info box moderno */
+        .info-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-left: 4px solid var(--primary);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-box h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 3rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -0.6rem;
+            top: 0;
+            width: 1.2rem;
+            height: 1.2rem;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .timeline-item h4 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        /* Quiz moderno */
+        .quiz-container {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            margin: 2rem 0;
+        }
+
+        .quiz-question {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-option {
+            background: rgba(30, 41, 59, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            margin: 0.8rem 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateX(10px);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+        }
+
+        .quiz-result {
+            display: none;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+            border: 2px solid var(--success);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        /* Botones modernos */
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 48px rgba(99, 102, 241, 0.6);
+        }
+
+        /* Chat moderno */
+        .chat-container {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+        }
+
+        .message {
+            margin-bottom: 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            max-width: 80%;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            margin-left: auto;
+        }
+
+        .message.bot {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-input-container {
+            padding: 1.5rem;
+            background: rgba(15, 23, 42, 0.8);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Footer moderno */
+        footer {
+            background: rgba(15, 23, 42, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 0;
+            margin-top: 5rem;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-content {
+                flex-direction: column;
+            }
+            
+            .nav-btn {
+                width: 100%;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chat-container {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <h1>🚀 TechLearn</h1>
+            <p>Plataforma Educativa Moderna de Tecnología</p>
+            <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 0.5rem;">UE San Francisco de Asís - Campus Edén</p>
+        </div>
+    </div>
+
+    <!-- Navegación -->
+    <nav class="nav">
+        <div class="nav-content">
+            <button class="nav-btn active" data-section="inicio">🏠 Inicio</button>
+            <button class="nav-btn" data-section="sistemas">💻 Sistemas Operativos</button>
+            <button class="nav-btn" data-section="redes">🌐 Redes</button>
+            <button class="nav-btn" data-section="soporte">🔧 Soporte Técnico</button>
+            <button class="nav-btn" data-section="actividades">✏️ Evaluación</button>
+            <button class="nav-btn" data-section="recursos">📚 Recursos</button>
+            <button class="nav-btn" data-section="chat">🤖 Asistente IA</button>
+        </div>
+    </nav>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- INICIO -->
+        <div id="inicio" class="section active">
+            <div class="hero">
+                <h2>Aprende Tecnología del Futuro</h2>
+                <p>Domina sistemas operativos, redes de computadoras y soporte técnico profesional con contenido actualizado y práctico</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Módulos Completos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Conceptos Clave</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Asistente IA</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Práctico</div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <span class="card-icon">💻</span>
+                    <h3>Sistemas Operativos</h3>
+                    <p>Aprende Windows, Linux y macOS. Gestión de procesos, memoria, archivos y seguridad del sistema.</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">🌐</span>
+                    <h3>Redes de Computadoras</h3>
+                    <p>Domina TCP/IP, configuración de routers, WiFi, seguridad de red y protocolos de Internet.</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">🔧</span>
+                    <h3>Soporte Técnico</h3>
+                    <p>Diagnóstico y solución de problemas. Metodología profesional y herramientas esenciales.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SISTEMAS OPERATIVOS -->
+        <div id="sistemas" class="section">
+            <div class="hero">
+                <h2>💻 Sistemas Operativos</h2>
+                <p>El software que hace funcionar tu computadora</p>
+            </div>
+
+            <div class="info-box">
+                <h3>¿Qué es un Sistema Operativo?</h3>
+                <p>Un <strong>sistema operativo (SO)</strong> es el software fundamental que gestiona el hardware y los recursos de la computadora. Actúa como intermediario entre las aplicaciones y el hardware, permitiendo que los programas funcionen correctamente.</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <span class="card-icon">⚙️</span>
+                    <h3>Funciones Principales</h3>
+                    <ul>
+                        <li><strong>Gestión de Procesos:</strong> Multitarea y planificación de CPU</li>
+                        <li><strong>Gestión de Memoria:</strong> Asignación de RAM a programas</li>
+                        <li><strong>Sistema de Archivos:</strong> Organización de datos (NTFS, ext4, APFS)</li>
+                        <li><strong>Gestión de E/S:</strong> Control de dispositivos periféricos</li>
+                        <li><strong>Seguridad:</strong> Permisos, encriptación y firewall</li>
+                        <li><strong>Interfaz de Usuario:</strong> GUI (gráfica) o CLI (línea de comandos)</li>
+                        <li><strong>Gestión de Red:</strong> Protocolos y conectividad</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <span class="card-icon">🖥️</span>
+                    <h3>Tipos de Sistemas Operativos</h3>
+                    <ul>
+                        <li><strong>Windows:</strong> Más usado en PCs (87% del mercado)</li>
+                        <li><strong>Linux:</strong> Código abierto, domina servidores (96.3%)</li>
+                        <li><strong>macOS:</strong> Sistema Unix de Apple, muy estable</li>
+                        <li><strong>Android:</strong> SO móvil más popular (72% global)</li>
+                        <li><strong>iOS:</strong> Sistema cerrado de iPhone/iPad</li>
+                        <li><strong>Chrome OS:</strong> Basado en web, para Chromebooks</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <span class="card-icon">🔧</span>
+                    <h3>Componentes del Sistema</h3>
+                    <ul>
+                        <li><strong>Kernel:</strong> Núcleo que gestiona recursos críticos</li>
+                        <li><strong>Shell:</strong> Intérprete de comandos del usuario</li>
+                        <li><strong>Drivers:</strong> Software para comunicación con hardware</li>
+                        <li><strong>Servicios:</strong> Programas en segundo plano</li>
+                        <li><strong>API:</strong> Interfaz para desarrolladores</li>
+                        <li><strong>Bootloader:</strong> Carga el SO al iniciar</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-box" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border-left-color: var(--success);">
+                <h3>💡 Datos Interesantes</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Linux Domina la Web</h4>
+                        <p>Más del 96% de los servidores web del mundo usan Linux. También impulsa el 100% de los supercomputadores TOP500.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Windows NT</h4>
+                        <p>El núcleo de Windows NT (1993) sigue siendo la base de Windows 11, demostrando su estabilidad y diseño robusto.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>macOS y Unix</h4>
+                        <p>macOS está certificado como Unix, lo que le da gran estabilidad y poderosas capacidades de terminal.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Android = Linux</h4>
+                        <p>Android usa el kernel de Linux, convirtiéndolo en el SO más usado del mundo (más de 3 mil millones de dispositivos).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>🎯 Comparativa de Sistemas Operativos</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+                    <tr style="border-bottom: 2px solid rgba(99, 102, 241, 0.5);">
+                        <th style="padding: 1rem; text-align: left;">Característica</th>
+                        <th style="padding: 1rem; text-align: center;">Windows</th>
+                        <th style="padding: 1rem; text-align: center;">Linux</th>
+                        <th style="padding: 1rem; text-align: center;">macOS</th>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                        <td style="padding: 1rem;"><strong>Licencia</strong></td>
+                        <td style="padding: 1rem; text-align: center;">Propietaria</td>
+                        <td style="padding: 1rem; text-align: center;">Código Abierto</td>
+                        <td style="padding: 1rem; text-align: center;">Propietaria</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                        <td style="padding: 1rem;"><strong>Costo</strong></td>
+                        <td style="padding: 1rem; text-align: center;">$139-$199</td>
+                        <td style="padding: 1rem; text-align: center;">Gratis</td>
+                        <td style="padding: 1rem; text-align: center;">Incluido con Mac</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                        <td style="padding: 1rem;"><strong>Seguridad</strong></td>
+                        <td style="padding: 1rem; text-align: center;">Media</td>
+                        <td style="padding: 1rem; text-align: center;">Alta</td>
+                        <td style="padding: 1rem; text-align: center;">Alta</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                        <td style="padding: 1rem;"><strong>Gaming</strong></td>
+                        <td style="padding: 1rem; text-align: center;">Excelente</td>
+                        <td style="padding: 1rem; text-align: center;">Limitado</td>
+                        <td style="padding: 1rem; text-align: center;">Bueno</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem;"><strong>Personalización</strong></td>
+                        <td style="padding: 1rem; text-align: center;">Media</td>
+                        <td style="padding: 1rem; text-align: center;">Total</td>
+                        <td style="padding: 1rem; text-align: center;">Limitada</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- REDES -->
+        <div id="redes" class="section">
+            <div class="hero">
+                <h2>🌐 Redes de Computadoras</h2>
+                <p>Conectividad global y comunicación de datos</p>
+            </div>
+
+            <div class="info-box">
+                <h3>¿Qué es una Red de Computadoras?</h3>
+                <p>Una <strong>red de computadoras</strong> es un conjunto de dispositivos interconectados que comparten recursos e información mediante protocolos estandarizados. Las redes son la base de Internet, el correo electrónico, las videollamadas y la computación en la nube.</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <span class="card-icon">📡</span>
+                    <h3>Tipos de Redes por Alcance</h3>
+                    <ul>
+                        <li><strong>PAN:</strong> Red personal (Bluetooth, USB) - 10 metros</li>
+                        <li><strong>LAN:</strong> Red local (hogar, oficina) - hasta 1 km</li>
+                        <li><strong>WLAN:</strong> LAN inalámbrica (WiFi) - 100 metros</li>
+                        <li><strong>MAN:</strong> Red metropolitana (ciudad) - 50 km</li>
+                        <li><strong>WAN:</strong> Red amplia (países) - ilimitada</li>
+                        <li><strong>VPN:</strong> Red privada virtual sobre Internet</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <span class="card-icon">🔌</span>
+                    <h3>Dispositivos de Red</h3>
+                    <ul>
+                        <li><strong>Router:</strong> Conecta redes diferentes, asigna IPs</li>
+                        <li><strong>Switch:</strong> Conecta dispositivos en LAN inteligentemente</li>
+                        <li><strong>Módem:</strong> Convierte señales digitales/analógicas</li>
+                        <li><strong>Access Point:</strong> Proporciona acceso WiFi</li>
+                        <li><strong>Firewall:</strong> Protege de tráfico malicioso</li>
+                        <li><strong>Hub:</strong> Dispositivo básico (obsoleto)</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <span class="card-icon">📦</span>
+                    <h3>Protocolos Fundamentales</h3>
+                    <ul>
+                        <li><strong>TCP/IP:</strong> Estándar de Internet (capa 3-4)</li>
+                        <li><strong>HTTP/HTTPS:</strong> Navegación web (puerto 80/443)</li>
+                        <li><strong>DNS:</strong> Traduce dominios a IPs</li>
+                        <li><strong>DHCP:</strong> Asigna IPs automáticamente</li>
+                        <li><strong>FTP/SFTP:</strong> Transferencia de archivos</li>
+                        <li><strong>SSH:</strong> Acceso remoto seguro (puerto 22)</li>
+                        <li><strong>SMTP/IMAP:</strong> Correo electrónico</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>🔑 Direccionamiento IP</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
+                    <div>
+                        <h4 style="color: var(--primary); margin-bottom: 1rem;">IPv4</h4>
+                        <p><strong>Formato:</strong> 192.168.1.1 (4 octetos)</p>
+                        <p><strong>Total:</strong> ~4.3 mil millones de direcciones</p>
+                        <p><strong>Redes privadas:</strong></p>
+                        <ul style="list-style: none; padding-left: 1rem; margin-top: 0.5rem;">
+                            <li>• 10.0.0.0/8</li>
+                            <li>• 172.16.0.0/12</li>
+                            <li>• 192.168.0.0/16</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--secondary); margin-bottom: 1rem;">IPv6</h4>
+                        <p><strong>Formato:</strong> 2001:0db8:85a3::8a2e:0370:7334</p>
+                        <p><strong>Total:</strong> 340 sextillones de direcciones</p>
+                        <p><strong>Ventajas:</strong></p>
+                        <ul style="list-style: none; padding-left: 1rem; margin-top: 0.5rem;">
+                            <li>• Más direcciones disponibles</li>
+                            <li>• Mejor seguridad (IPsec integrado)</li>
+                            <li>• Autoconfiguración</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1)); border-left-color: var(--warning);">
+                <h3>📊 Modelo OSI - 7 Capas</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Capa 7 - Aplicación</h4>
+                        <p>HTTP, FTP, SMTP, DNS - Interacción con el usuario</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Capa 6 - Presentación</h4>
+                        <p>Encriptación, compresión, formato de datos</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Capa 5 - Sesión</h4>
+                        <p>Establece, mantiene y termina conexiones</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Capa 4 - Transporte</h4>
+                        <p>TCP, UDP - Control de flujo y errores</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Capa 3 - Red</h4>
+                        <p>IP, Router - Enrutamiento de paquetes</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Capa 2 - Enlace de Datos</h4>
+                        <p>Ethernet, Switch - Control de acceso al medio</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Capa 1 - Física</h4>
+                        <p>Cables, señales eléctricas, bits</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOPORTE TÉCNICO -->
+        <div id="soporte" class="section">
+            <div class="hero">
+                <h2>🔧 Soporte Técnico Profesional</h2>
+                <p>Diagnóstico, solución y prevención de problemas</p>
+            </div>
+
+            <div class="info-box">
+                <h3>¿Qué es el Soporte Técnico?</h3>
+                <p>El <strong>soporte técnico</strong> es el servicio profesional que brinda asistencia para resolver problemas de hardware, software y redes. Implica diagnóstico sistemático, resolución efectiva y prevención futura mediante metodología estructurada.</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <span class="card-icon">🔍</span>
+                    <h3>Metodología de 7 Pasos</h3>
+                    <ul>
+                        <li><strong>1. Identificar:</strong> Recopilar información detallada</li>
+                        <li><strong>2. Investigar:</strong> Establecer teoría de causa probable</li>
+                        <li><strong>3. Probar:</strong> Verificar la teoría con pruebas</li>
+                        <li><strong>4. Planificar:</strong> Crear plan de acción detallado</li>
+                        <li><strong>5. Implementar:</strong> Aplicar la solución</li>
+                        <li><strong>6. Verificar:</strong> Confirmar funcionalidad completa</li>
+                        <li><strong>7. Documentar:</strong> Registrar para referencias futuras</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <span class="card-icon">🛠️</span>
+                    <h3>Problemas Comunes</h3>
+                    <ul>
+                        <li><strong>PC Lenta:</strong> RAM insuficiente, malware, disco lleno</li>
+                        <li><strong>No Enciende:</strong> Fuente de poder, RAM, placa madre</li>
+                        <li><strong>Pantalla Azul (BSOD):</strong> Drivers, hardware defectuoso</li>
+                        <li><strong>WiFi Intermitente:</strong> Interferencias, drivers, router</li>
+                        <li><strong>Virus/Malware:</strong> Infección, ransomware, spyware</li>
+                        <li><strong>Impresora:</strong> Drivers, cola de impresión, conexión</li>
+                        <li><strong>Apps Crasheando:</strong> Incompatibilidad, archivos corruptos</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <span class="card-icon">🧰</span>
+                    <h3>Herramientas Esenciales</h3>
+                    <ul>
+                        <li><strong>Software:</strong> Malwarebytes, HWMonitor, Wireshark</li>
+                        <li><strong>Diagnóstico:</strong> CrystalDiskInfo, MemTest86</li>
+                        <li><strong>Limpieza:</strong> CCleaner, BleachBit, Disk Cleanup</li>
+                        <li><strong>Recovery:</strong> Recuva, TestDisk, PhotoRec</li>
+                        <li><strong>Red:</strong> ping, tracert, ipconfig, nslookup</li>
+                        <li><strong>Hardware:</strong> Destornilladores, multímetro, pulsera antiestática</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>🎯 Niveles de Soporte Técnico</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
+                    <div style="background: rgba(99, 102, 241, 0.1); padding: 1.5rem; border-radius: 12px;">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Nivel 1 - Help Desk</h4>
+                        <p>Problemas básicos, reseteo de contraseñas, instalación de software</p>
+                    </div>
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 1.5rem; border-radius: 12px;">
+                        <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">Nivel 2 - Técnico</h4>
+                        <p>Problemas avanzados, configuración de red, reparación de hardware</p>
+                    </div>
+                    <div style="background: rgba(236, 72, 153, 0.1); padding: 1.5rem; border-radius: 12px;">
+                        <h4 style="color: var(--accent); margin-bottom: 0.5rem;">Nivel 3 - Especialista</h4>
+                        <p>Problemas complejos, arquitectura de sistemas, seguridad avanzada</p>
+                    </div>
+                    <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px;">
+                        <h4 style="color: var(--success); margin-bottom: 0.5rem;">Nivel 4 - Fabricante</h4>
+                        <p>Bugs de software, defectos de hardware, soporte del fabricante</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border-left-color: var(--success);">
+                <h3>📅 Calendario de Mantenimiento Preventivo</h3>
+                <div style="margin-top: 1.5rem;">
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="color: var(--success); margin-bottom: 0.8rem;">⏰ Diario/Semanal</h4>
+                        <p>• Backups incrementales<br>• Verificar espacio en disco<br>• Revisar logs del sistema<br>• Escaneo antivirus rápido</p>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="color: var(--primary); margin-bottom: 0.8rem;">📆 Mensual</h4>
+                        <p>• Actualizaciones del sistema<br>• Limpieza de archivos temporales<br>• Verificación de disco (chkdsk)<br>• Revisar programas de inicio</p>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="color: var(--warning); margin-bottom: 0.8rem;">📅 Trimestral</h4>
+                        <p>• Limpieza física interna<br>• Verificar temperaturas<br>• Actualizar pasta térmica<br>• Backup completo del sistema</p>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--accent); margin-bottom: 0.8rem;">🗓️ Anual</h4>
+                        <p>• Limpieza profunda de hardware<br>• Verificar salud de discos (SMART)<br>• Renovar contraseñas críticas<br>• Auditoría de seguridad completa</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTIVIDADES -->
+        <div id="actividades" class="section">
+            <div class="hero">
+                <h2>✏️ Evaluación de Conocimientos</h2>
+                <p>Pon a prueba lo que has aprendido</p>
+            </div>
+
+            <div class="quiz-container">
+                <h3 style="font-size: 2rem; margin-bottom: 2rem; text-align: center;">📝 Quiz Interactivo</h3>
+                
+                <div class="quiz-question">
+                    <h4 style="margin-bottom: 1.5rem; font-size: 1.2rem;">1. ¿Cuál es la función principal de un sistema operativo?</h4>
+                    <div class="quiz-option" data-question="0" data-correct="false">A) Navegar por Internet</div>
+                    <div class="quiz-option" data-question="0" data-correct="true">B) Gestionar los recursos del computador</div>
+                    <div class="quiz-option" data-question="0" data-correct="false">C) Crear documentos</div>
+                    <div class="quiz-option" data-question="0" data-correct="false">D) Jugar videojuegos</div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4 style="margin-bottom: 1.5rem; font-size: 1.2rem;">2. ¿Qué dispositivo conecta múltiples equipos en una red local?</h4>
+                    <div class="quiz-option" data-question="1" data-correct="false">A) Módem</div>
+                    <div class="quiz-option" data-question="1" data-correct="true">B) Switch</div>
+                    <div class="quiz-option" data-question="1" data-correct="false">C) Disco duro</div>
+                    <div class="quiz-option" data-question="1" data-correct="false">D) Monitor</div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4 style="margin-bottom: 1.5rem; font-size: 1.2rem;">3. ¿Cuál es el primer paso en la metodología de soporte técnico?</h4>
+                    <div class="quiz-option" data-question="2" data-correct="true">A) Identificar el problema</div>
+                    <div class="quiz-option" data-question="2" data-correct="false">B) Reiniciar el computador</div>
+                    <div class="quiz-option" data-question="2" data-correct="false">C) Llamar al fabricante</div>
+                    <div class="quiz-option" data-question="2" data-correct="false">D) Formatear el disco</div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4 style="margin-bottom: 1.5rem; font-size: 1.2rem;">4. ¿Qué protocolo traduce nombres de dominio a direcciones IP?</h4>
+                    <div class="quiz-option" data-question="3" data-correct="false">A) HTTP</div>
+                    <div class="quiz-option" data-question="3" data-correct="true">B) DNS</div>
+                    <div class="quiz-option" data-question="3" data-correct="false">C) FTP</div>
+                    <div class="quiz-option" data-question="3" data-correct="false">D) TCP</div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4 style="margin-bottom: 1.5rem; font-size: 1.2rem;">5. ¿Qué componente del SO es el "núcleo" del sistema?</h4>
+                    <div class="quiz-option" data-question="4" data-correct="true">A) Kernel</div>
+                    <div class="quiz-option" data-question="4" data-correct="false">B) Shell</div>
+                    <div class="quiz-option" data-question="4" data-correct="false">C) Driver</div>
+                    <div class="quiz-option" data-question="4" data-correct="false">D) GUI</div>
+                </div>
+
+                <button class="btn" id="submitQuizBtn" style="margin: 2rem auto; display: block;">Enviar Respuestas</button>
+                <div class="quiz-result" id="quizResult"></div>
+            </div>
+        </div>
+
+        <!-- RECURSOS -->
+        <div id="recursos" class="section">
+            <div class="hero">
+                <h2>📚 Recursos Adicionales</h2>
+                <p>Material complementario para profundizar tu aprendizaje</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <span class="card-icon">📖</span>
+                    <h3>Documentación Oficial</h3>
+                    <ul>
+                        <li>Microsoft Docs - Windows</li>
+                        <li>Linux Kernel Documentation</li>
+                        <li>Apple Developer Guides</li>
+                        <li>Cisco Networking Academy</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="card-icon">🎓</span>
+                    <h3>Cursos Recomendados</h3>
+                    <ul>
+                        <li>CompTIA A+ Certification</li>
+                        <li>CCNA - Cisco Certified</li>
+                        <li>Linux Foundation Courses</li>
+                        <li>Microsoft Certified Solutions</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="card-icon">🛠️</span>
+                    <h3>Herramientas Prácticas</h3>
+                    <ul>
+                        <li>VirtualBox - Máquinas virtuales</li>
+                        <li>Wireshark - Análisis de red</li>
+                        <li>Packet Tracer - Simulador Cisco</li>
+                        <li>GNS3 - Emulador de redes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHAT IA -->
+        <div id="chat" class="section">
+            <div class="hero">
+                <h2>🤖 Asistente Virtual IA</h2>
+                <p>Tu tutor personal disponible 24/7</p>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-header">
+                    <span style="font-weight: 700; font-size: 1.2rem;">🤖 TechMentor IA</span>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="clearChat()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">🗑️ Limpiar</button>
+                        <button onclick="exportChat()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">💾 Exportar</button>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Pregunta sobre tecnología..." />
+                    <button class="btn" id="sendChatBtn" style="padding: 1rem 2rem;">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Unidad Educativa San Francisco de Asís</h3>
+        <p style="opacity: 0.8; margin: 0.5rem 0;">Campus Edén</p>
+        <p style="opacity: 0.8; margin: 0.5rem 0;">Desarrollado por: Naomi Díaz Navarrete y Fabrizzio Jiménez Gaona</p>
+        <p style="opacity: 0.8; margin: 0.5rem 0;">Tutor: Fulton Eduardo Vivas Caiza</p>
+        <p style="opacity: 0.6; margin-top: 1rem;">&copy; 2025 Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        let quizAnswers = new Array(5).fill(null);
+        let chatHistory = [];
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId)?.classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[data-section="${sectionId}"]`)?.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (sectionId === 'chat') loadChatHistory();
+        }
+
+        function setupQuiz() {
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.addEventListener('click', function() {
+                    const q = parseInt(this.dataset.question);
+                    document.querySelectorAll(`[data-question="${q}"]`).forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    quizAnswers[q] = this.dataset.correct === 'true';
+                });
+            });
+        }
+
+        function submitQuiz() {
+            if (quizAnswers.some(a => a === null)) {
+                alert('⚠️ Por favor responde todas las preguntas');
+                return;
+            }
+            
+            const correct = quizAnswers.filter(a => a).length;
+            const total = quizAnswers.length;
+            const percent = (correct / total) * 100;
+            const result = document.getElementById('quizResult');
+            result.style.display = 'block';
+            result.innerHTML = `
+                <h3 style="font-size: 2rem; margin-bottom: 1rem;">${percent >= 80 ? '🌟 ¡Excelente!' : percent >= 60 ? '👍 Buen trabajo!' : '📚 Sigue practicando!'}</h3>
+                <p style="font-size: 1.5rem; font-weight: 700;">${correct} de ${total} correctas (${Math.round(percent)}%)</p>
+            `;
+        }
+
+        const kb = {
+            'hola': '¡Hola! 👋 Soy TechMentor, tu asistente de tecnología. ¿En qué puedo ayudarte?',
+            'sistema operativo': 'Un sistema operativo gestiona todos los recursos del computador: CPU, memoria, archivos y dispositivos. Ejemplos: Windows, Linux, macOS.',
+            'pc lenta': 'Soluciones para PC lenta:\n1. Libera espacio en disco\n2. Desactiva programas de inicio\n3. Actualiza drivers\n4. Escanea con antivirus\n5. Considera más RAM',
+            'wifi': 'Para problemas de WiFi:\n• Reinicia el router\n• Acércate al router\n• Cambia el canal WiFi\n• Actualiza drivers de red\n• Verifica interferencias',
+            'redes': 'Las redes conectan computadoras para compartir recursos. Tipos principales: LAN (local), WAN (amplia), WiFi (inalámbrica).',
+            'gracias': '¡De nada! 😊 Estoy aquí para ayudarte con cualquier duda.'
+        };
+
+        function loadChatHistory() {
+            const msgs = document.getElementById('chatMessages');
+            msgs.innerHTML = '';
+            const saved = localStorage.getItem('chatHistory');
+            if (saved) {
+                chatHistory = JSON.parse(saved);
+                chatHistory.forEach(m => addMsg(m.text, m.sender));
+            } else {
+                const welcome = "¡Hola! 👋 Soy TechMentor. Puedo ayudarte con Sistemas Operativos, Redes y Soporte Técnico. ¿En qué puedo ayudarte?";
+                addMsg(welcome, 'bot');
+                chatHistory.push({ text: welcome, sender: 'bot' });
+                localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+            }
+        }
+
+        function addMsg(text, sender) {
+            const msgs = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            div.innerHTML = `<strong>${sender === 'user' ? 'Tú:' : 'TechMentor:'}</strong><br>${text.replace(/\n/g, '<br>')}`;
+            msgs.appendChild(div);
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+            
+            addMsg(msg, 'user');
+            chatHistory.push({ text: msg, sender: 'user' });
+            input.value = '';
+            localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+
+            setTimeout(() => {
+                let response = 'Interesante pregunta. Puedo ayudarte con: Sistemas Operativos, Redes, WiFi, PC lenta, Soporte Técnico. ¿Qué necesitas saber?';
+                for (let k in kb) {
+                    if (msg.toLowerCase().includes(k)) {
+                        response = kb[k];
+                        break;
+                    }
+                }
+                addMsg(response, 'bot');
+                chatHistory.push({ text: response, sender: 'bot' });
+                localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+            }, 1000);
+        }
+
+        function clearChat() {
+            if (confirm('¿Limpiar historial del chat?')) {
+                chatHistory = [];
+                localStorage.removeItem('chatHistory');
+                loadChatHistory();
+            }
+        }
+
+        function exportChat() {
+            let txt = '=== HISTORIAL DE CHAT ===\n' + `Fecha: ${new Date().toLocaleString()}\n\n`;
+            chatHistory.forEach(m => txt += `${m.sender === 'user' ? 'TÚ' : 'TECHMENTOR'}: ${m.text}\n\n`);
+            const blob = new Blob([txt], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `chat_${Date.now()}.txt`;
+            a.click();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => showSection(btn.dataset.section));
+            });
+            setupQuiz();
+            document.getElementById('submitQuizBtn')?.addEventListener('click', submitQuiz);
+            document.getElementById('chatInput')?.addEventListener('keypress', e => {
+                if (e.key === 'Enter') sendMessage();
+            });
+            document.getElementById('sendChatBtn')?.addEventListener('click', sendMessage);
+            showSection('inicio');
+        });
+    </script>
+</body>
+</html>

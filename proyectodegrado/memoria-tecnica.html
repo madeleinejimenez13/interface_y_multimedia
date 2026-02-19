@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soporte Técnico y Sistemas Operativos - UE San Francisco de Asís</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: #1a1a2e;
+            padding: 2.5rem 0;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .header-content h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        .header-content .subtitle {
+            font-size: 1.2rem;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-content .description {
+            font-size: 1rem;
+            color: #777;
+        }
+
+        nav {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: white;
+            border: 2px solid transparent;
+            padding: 0.8rem 1.8rem;
+            cursor: pointer;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .nav-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+            min-height: 60vh;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        .welcome-section {
+            text-align: center;
+            padding: 3rem 0;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section h2 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+
+        .welcome-section p {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.2);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .card ul {
+            margin-top: 1rem;
+            margin-left: 0;
+            list-style: none;
+        }
+
+        .card li {
+            margin-bottom: 0.8rem;
+            color: #555;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .content-box {
+            background: white;
+            border-left: 5px solid #667eea;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .content-box h4 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .content-box p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .quiz-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+
+        .quiz-container h3 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .quiz-question {
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .quiz-question h4 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .quiz-option {
+            padding: 1.2rem 1.5rem;
+            border: 3px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            font-weight: 500;
+        }
+
+        .quiz-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateX(5px);
+        }
+
+        .quiz-option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            font-weight: 600;
+        }
+
+        .quiz-result {
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            display: none;
+            animation: slideIn 0.5s ease;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .resources-list {
+            list-style: none;
+        }
+
+        .resources-list li {
+            background: white;
+            margin-bottom: 1.5rem;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
+        }
+
+        .resources-list li:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .resources-list a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .resources-list a:hover {
+            color: #764ba2;
+        }
+
+        .resources-list p {
+            color: #666;
+            margin-top: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .message {
+            margin-bottom: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            border-radius: 15px;
+            max-width: 80%;
+            animation: messageSlide 0.3s ease;
+            line-height: 1.6;
+        }
+
+        @keyframes messageSlide {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.bot {
+            background: white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-bottom-left-radius: 5px;
+        }
+
+        .typing-indicator {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            max-width: 60%;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        .chat-input-container {
+            padding: 1.5rem;
+            background: white;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        footer {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            box-shadow: 0 -4px 30px rgba(0,0,0,0.2);
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            opacity: 0.9;
+        }
+
+        .footer-highlight {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .forum-post {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .forum-post:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .forum-post h4 {
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .forum-meta {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .forum-post p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .badge-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .badge-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .badge-info {
+            background: #2196F3;
+            color: white;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 50px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .challenge-card {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            border: 2px solid #ff7b7b;
+            color: #5a2a27;
+        }
+
+        .challenge-card h3 {
+            color: #5a2a27;
+        }
+
+        .challenge-card::before {
+            background: linear-gradient(90deg, #ff7b7b, #ff9a9e);
+        }
+
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2rem;
+            }
+
+            .welcome-section h2 {
+                font-size: 2rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-content {
+                flex-direction: column;
+            }
+
+            .message, .typing-indicator {
+                max-width: 90%;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .quiz-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🖥️ Soporte Técnico y Sistemas Operativos</h1>
+            <p class="subtitle">Unidad Educativa San Francisco de Asís - Campus Edén</p>
+            <p class="description">Plataforma Digital de Aprendizaje Tecnológico Interactivo</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-content">
+            <button class="nav-btn active" onclick="showSection('inicio')">🏠 Inicio</button>
+            <button class="nav-btn" onclick="showSection('sistemas')">💻 Sistemas Operativos</button>
+            <button class="nav-btn" onclick="showSection('redes')">🌐 Redes</button>
+            <button class="nav-btn" onclick="showSection('soporte')">🔧 Soporte Técnico</button>
+            <button class="nav-btn" onclick="showSection('actividades')">✏️ Actividades</button>
+            <button class="nav-btn" onclick="showSection('recursos')">📚 Recursos</button>
+            <button class="nav-btn" onclick="showSection('foro')">💬 Foro</button>
+            <button class="nav-btn" onclick="showSection('chat')">🤖 Chat</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Sección Inicio -->
+        <div id="inicio" class="section active">
+            <div class="welcome-section">
+                <h2>¡Bienvenido a tu Plataforma Educativa!</h2>
+                <p>Explora, aprende y domina los conceptos fundamentales de tecnología. Esta plataforma ha sido diseñada con recursos interactivos, actividades prácticas y herramientas colaborativas para potenciar tu aprendizaje en Sistemas Operativos, Redes y Soporte Técnico.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Módulos Educativos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Recursos Didácticos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Acceso Disponible</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">📚</div>
+                    <h3>Contenido Estructurado</h3>
+                    <p>Accede a contenidos educativos organizados por temas, con explicaciones claras, ejemplos prácticos y conceptos fundamentales que facilitan tu comprensión y aprendizaje progresivo.</p>
+                    <span class="badge badge-primary">Teoría</span>
+                    <span class="badge badge-info">Ejemplos</span>
+                </div>
+                <div class="card">
+                    <div class="card-icon">✏️</div>
+                    <h3>Actividades Interactivas</h3>
+                    <p>Realiza ejercicios prácticos, cuestionarios evaluativos y simulaciones que te permitirán aplicar los conocimientos adquiridos de manera práctica y efectiva.</p>
+                    <span class="badge badge-primary">Práctica</span>
+                    <span class="badge badge-success">Evaluación</span>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🤝</div>
+                    <h3>Aprendizaje Colaborativo</h3>
+                    <p>Participa en el foro de discusión y chat educativo para compartir ideas, resolver dudas colaborativamente y aprender junto a tus compañeros y profesores.</p>
+                    <span class="badge badge-info">Comunidad</span>
+                    <span class="badge badge-success">Soporte</span>
+                </div>
+            </div>
+
+            <div class="content-box" style="margin-top: 3rem;">
+                <h4>🎯 Objetivos de Aprendizaje</h4>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%" id="progressBar"></div>
+                </div>
+                <ul style="list-style: none; margin-left: 0;">
+                    <li style="padding-left: 0; margin-bottom: 1rem;">✓ Comprender los conceptos fundamentales de los sistemas operativos y su arquitectura</li>
+                    <li style="padding-left: 0; margin-bottom: 1rem;">✓ Conocer las bases del funcionamiento de las redes de computadoras y protocolos</li>
+                    <li style="padding-left: 0; margin-bottom: 1rem;">✓ Desarrollar habilidades prácticas de soporte técnico y resolución de problemas</li>
+                    <li style="padding-left: 0; margin-bottom: 1rem;">✓ Diagnosticar y resolver problemas comunes en equipos y conexiones de red</li>
+                    <li style="padding-left: 0; margin-bottom: 1rem;">✓ Utilizar herramientas digitales para diagnóstico, mantenimiento y práctica técnica</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sección Sistemas Operativos -->
+        <div id="sistemas" class="section">
+            <div class="welcome-section">
+                <h2>💻 Sistemas Operativos</h2>
+                <p>Descubre cómo funcionan los sistemas operativos, el software fundamental que gestiona todos los recursos de tu computadora.</p>
+            </div>
+            
+            <div class="content-box">
+                <h4>¿Qué es un Sistema Operativo?</h4>
+                <p>Un sistema operativo (SO) es el software fundamental que gestiona los recursos del computador y permite su funcionamiento. Actúa como intermediario entre el hardware (componentes físicos) y los programas de aplicación que utilizas diariamente.</p>
+                <p><strong>Función principal:</strong> Administrar eficientemente la memoria, procesador, dispositivos de entrada/salida y el almacenamiento de datos, proporcionando una interfaz amigable para el usuario.</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">⚙️</div>
+                    <h3>Funciones Principales</h3>
+                    <ul>
+                        <li>Gestión de procesos y multitarea</li>
+                        <li>Administración de memoria RAM</li>
+                        <li>Control de dispositivos de E/S</li>
+                        <li>Sistema de archivos y almacenamiento</li>
+                        <li>Gestión de usuarios y permisos</li>
+                        <li>Seguridad y protección de datos</li>
+                        <li>Interfaz de usuario (GUI/CLI)</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🖥️</div>
+                    <h3>Tipos de Sistemas Operativos</h3>
+                    <ul>
+                        <li><strong>Windows:</strong> SO más utilizado en PCs, desarrollado por Microsoft</li>
+                        <li><strong>Linux:</strong> Sistema de código abierto, altamente personalizable y seguro</li>
+                        <li><strong>macOS:</strong> Sistema operativo exclusivo de Apple para computadoras Mac</li>
+                        <li><strong>Android/iOS:</strong> Sistemas operativos para dispositivos móviles</li>
+                        <li><strong>Unix:</strong> Base de muchos sistemas modernos</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🔧</div>
+                    <h3>Componentes Básicos</h3>
+                    <ul>
+                        <li><strong>Kernel (Núcleo):</strong> Corazón del sistema operativo</li>
+                        <li><strong>Shell:</strong> Intérprete de comandos del usuario</li>
+                        <li><strong>Sistema de archivos:</strong> Organización y gestión de datos</li>
+                        <li><strong>Controladores (Drivers):</strong> Comunicación con hardware</li>
+                        <li><strong>Interfaz de usuario:</strong> Interacción visual o por comandos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-box" style="margin-top: 2rem;">
+                <h4>📖 Conceptos Fundamentales</h4>
+                <p><strong>Proceso:</strong> Un programa en ejecución que requiere recursos del sistema como CPU y memoria. Cada aplicación que abres crea uno o más procesos.</p>
+                <p><strong>Memoria RAM:</strong> Almacenamiento temporal de alta velocidad donde se cargan los programas activos. Más RAM permite ejecutar más programas simultáneamente.</p>
+                <p><strong>Disco Duro (HDD/SSD):</strong> Almacenamiento permanente donde se guardan archivos, programas y el sistema operativo. Los SSD son más rápidos que los HDD tradicionales.</p>
+                <p><strong>CPU (Procesador):</strong> Unidad de procesamiento central que ejecuta las instrucciones de los programas. Es el "cerebro" del computador.</p>
+                <p><strong>Sistema de Archivos:</strong> Método de organización de datos en el disco (NTFS en Windows, ext4 en Linux, APFS en macOS).</p>
+            </div>
+
+            <div class="cards-grid" style="margin-top: 2rem;">
+                <div class="card">
+                    <div class="card-icon">🔐</div>
+                    <h3>Seguridad del Sistema</h3>
+                    <p>Los sistemas operativos modernos incluyen múltiples capas de seguridad para proteger los datos y el funcionamiento del equipo:</p>
+                    <ul>
+                        <li><strong>Control de accesos:</strong> Perfiles de usuario y permisos</li>
+                        <li><strong>Firewall integrado:</strong> Filtra tráfico de red no deseado</li>
+                        <li><strong>Actualizaciones automáticas:</strong> Parches de seguridad regulares</li>
+                        <li><strong>Cifrado de disco:</strong> BitLocker (Windows), FileVault (macOS)</li>
+                        <li><strong>Protección contra malware:</strong> Windows Defender, Gatekeeper (macOS)</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🔄</div>
+                    <h3>Actualizaciones y Mantenimiento</h3>
+                    <p>El mantenimiento regular es esencial para el rendimiento y seguridad:</p>
+                    <ul>
+                        <li><strong>Actualizaciones del SO:</strong> Mejoras de rendimiento y correcciones</li>
+                        <li><strong>Limpieza de disco:</strong> Eliminación de archivos temporales</li>
+                        <li><strong>Desfragmentación:</strong> Optimización en discos HDD (no en SSD)</li>
+                        <li><strong>Monitoreo de recursos:</strong> Administrador de tareas/actividad</li>
+                        <li><strong>Copias de seguridad:</strong> Protección contra pérdida de datos</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🌐</div>
+                    <h3>Interfaz de Usuario (UI)</h3>
+                    <p>Dos tipos principales de interfaces permiten interactuar con el sistema:</p>
+                    <ul>
+                        <li><strong>GUI (Interfaz Gráfica):</strong> Ventanas, íconos, botones (Windows, macOS)</li>
+                        <li><strong>CLI (Línea de Comandos):</strong> Terminal o Símbolo del sistema (más eficiente para tareas avanzadas)</li>
+                        <li><strong>Entornos de escritorio:</strong> GNOME, KDE (Linux), Aero (Windows)</li>
+                        <li><strong>Accesibilidad:</strong> Soporte para lectores de pantalla, teclas especiales</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-box" style="margin-top: 2rem; background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);">
+                <h4>💡 ¿Sabías que...?</h4>
+                <p>• El primer sistema operativo de propósito general fue el <strong>GM-NAA I/O</strong> en 1956 para computadoras IBM.</p>
+                <p>• <strong>Linux</strong> impulsa más del 90% de los servidores web del mundo y el 100% de los supercomputadores TOP500.</p>
+                <p>• macOS está basado en <strong>Unix</strong>, lo que le da gran estabilidad y seguridad.</p>
+                <p>• Windows utiliza el núcleo <strong>NT (New Technology)</strong> desde Windows NT en 1993.</p>
+            </div>
+        </div>
+
+        <!-- Sección Redes -->
+        <div id="redes" class="section">
+            <div class="welcome-section">
+                <h2>🌐 Redes de Computadoras</h2>
+                <p>Aprende cómo los dispositivos se comunican y comparten recursos en redes locales e internet.</p>
+            </div>
+            
+            <div class="content-box">
+                <h4>¿Qué es una Red de Computadoras?</h4>
+                <p>Una red de computadoras es un conjunto de dispositivos interconectados que pueden compartir recursos (archivos, impresoras) e intercambiar información entre sí mediante protocolos de comunicación.</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">📡</div>
+                    <h3>Tipos de Redes</h3>
+                    <ul>
+                        <li><strong>LAN (Red de Área Local):</strong> Oficinas, hogares (pocos metros/km)</li>
+                        <li><strong>WAN (Red de Área Amplia):</strong> Países, continentes (Internet)</li>
+                        <li><strong>MAN (Red de Área Metropolitana):</strong> Ciudades</li>
+                        <li><strong>PAN (Red de Área Personal):</strong> Bluetooth, USB</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🔌</div>
+                    <h3>Dispositivos de Red</h3>
+                    <ul>
+                        <li><strong>Router:</strong> Conecta redes diferentes, asigna IPs</li>
+                        <li><strong>Switch:</strong> Conecta dispositivos en una LAN</li>
+                        <li><strong>Módem:</strong> Convierte señal digital/análoga</li>
+                        <li><strong>Access Point:</strong> Extiende WiFi</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">📦</div>
+                    <h3>Protocolos de Red</h3>
+                    <ul>
+                        <li><strong>TCP/IP:</strong> Estándar de Internet</li>
+                        <li><strong>HTTP/HTTPS:</strong> Navegación web segura</li>
+                        <li><strong>DNS:</strong> Traduce dominios a IPs</li>
+                        <li><strong>DHCP:</strong> Asigna IPs automáticamente</li>
+                        <li><strong>FTP:</strong> Transferencia de archivos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-box" style="margin-top: 2rem;">
+                <h4>🔑 Dirección IP</h4>
+                <p>Identificador único de cada dispositivo en una red.</p>
+                <p><strong>IPv4:</strong> Formato: 192.168.1.1 (32 bits, ~4 mil millones direcciones)</p>
+                <p><strong>IPv6:</strong> Formato: 2001:0db8:85a3::8a2e:0370:7334 (128 bits, trillones de direcciones)</p>
+                <p>La máscara de subred (ej. 255.255.255.0) define qué parte es red y qué parte es host.</p>
+            </div>
+        </div>
+
+        <!-- Sección Soporte Técnico -->
+        <div id="soporte" class="section">
+            <div class="welcome-section">
+                <h2>🔧 Soporte Técnico</h2>
+                <p>Desarrolla habilidades prácticas para diagnosticar y resolver problemas técnicos.</p>
+            </div>
+            
+            <div class="content-box">
+                <h4>¿Qué es el Soporte Técnico?</h4>
+                <p>Conjunto de servicios que brindan asistencia a usuarios para resolver problemas relacionados con hardware, software, redes y otros dispositivos tecnológicos.</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">🔍</div>
+                    <h3>Diagnóstico Técnico</h3>
+                    <ul>
+                        <li>Escucha activa al usuario</li>
+                        <li>Identificación de síntomas</li>
+                        <li>Uso de herramientas de diagnóstico</li>
+                        <li>Pruebas sistemáticas</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🛠️</div>
+                    <h3>Problemas Comunes</h3>
+                    <ul>
+                        <li>PC lenta o no enciende</li>
+                        <li>Errores de arranque (BSOD)</li>
+                        <li>Conexión WiFi inestable</li>
+                        <li>Virus o ransomware</li>
+                        <li>Impresora no responde</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🧰</div>
+                    <h3>Herramientas Esenciales</h3>
+                    <ul>
+                        <li>Antivirus y antimalware</li>
+                        <li>Software de limpieza (CCleaner)</li>
+                        <li>Herramientas de red (ping, tracert)</li>
+                        <li>Kit de hardware (destornilladores, multímetro)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-box" style="margin-top: 2rem;">
+                <h4>📋 Metodología de Resolución</h4>
+                <ol style="margin-left: 2rem; color: #555;">
+                    <li><strong>Identificar:</strong> Recopilar información del problema</li>
+                    <li><strong>Investigar:</strong> Buscar causas posibles</li>
+                    <li><strong>Probar hipótesis:</strong> Aplicar soluciones tentativas</li>
+                    <li><strong>Implementar solución:</strong> Aplicar la solución definitiva</li>
+                    <li><strong>Verificar:</strong> Confirmar que el problema está resuelto</li>
+                    <li><strong>Documentar:</strong> Registrar para futuras referencias</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Sección Actividades MEJORADA -->
+        <div id="actividades" class="section">
+            <div class="welcome-section">
+                <h2>✏️ Actividades Interactivas</h2>
+                <p>Pon a prueba tus conocimientos con nuestro quiz y ejercicios prácticos.</p>
+            </div>
+            
+            <div class="quiz-container">
+                <h3>Quiz de Evaluación</h3>
+                
+                <div class="quiz-question">
+                    <h4>1. ¿Cuál es la función principal de un sistema operativo?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">A) Navegar por Internet</div>
+                        <div class="quiz-option" data-correct="true">B) Gestionar los recursos del computador</div>
+                        <div class="quiz-option" data-correct="false">C) Crear documentos</div>
+                        <div class="quiz-option" data-correct="false">D) Jugar videojuegos</div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>2. ¿Qué dispositivo se utiliza para conectar múltiples equipos en una red local?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">A) Módem</div>
+                        <div class="quiz-option" data-correct="true">B) Switch</div>
+                        <div class="quiz-option" data-correct="false">C) Disco duro</div>
+                        <div class="quiz-option" data-correct="false">D) Monitor</div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>3. ¿Cuál es el primer paso para resolver un problema técnico?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="true">A) Identificar el problema</div>
+                        <div class="quiz-option" data-correct="false">B) Reiniciar el computador</div>
+                        <div class="quiz-option" data-correct="false">C) Llamar al fabricante</div>
+                        <div class="quiz-option" data-correct="false">D) Formatear el disco</div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>4. ¿Qué protocolo se utiliza para traducir nombres de dominio a direcciones IP?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">A) HTTP</div>
+                        <div class="quiz-option" data-correct="true">B) DNS</div>
+                        <div class="quiz-option" data-correct="false">C) FTP</div>
+                        <div class="quiz-option" data-correct="false">D) TCP</div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>5. ¿Qué componente del sistema operativo es el "núcleo"?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="true">A) Kernel</div>
+                        <div class="quiz-option" data-correct="false">B) Shell</div>
+                        <div class="quiz-option" data-correct="false">C) Driver</div>
+                        <div class="quiz-option" data-correct="false">D) GUI</div>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="submitQuiz()">Enviar Respuestas</button>
+                <div class="quiz-result" id="quizResult"></div>
+            </div>
+
+            <div class="content-box" style="margin-top: 2rem;">
+                <h4>🔧 Ejercicios Prácticos</h4>
+                <ul style="list-style: none; margin-left: 0;">
+                    <li style="padding-left: 0; margin-bottom: 1rem;">✓ Identifica los componentes internos de tu computadora (CPU, RAM, disco)</li>
+                    <li style="padding-left: 0; margin-bottom: 1rem;">✓ Configura una dirección IP estática en tu sistema operativo</li>
+                    <li style="padding-left: 0; margin-bottom: 1rem;">✓ Usa el comando <code>ping</code> y <code>tracert</code> para diagnosticar red</li>
+                    <li style="padding-left: 0; margin-bottom: 1rem;">✓ Instala y configura un antivirus gratuito (ej: Malwarebytes)</li>
+                    <li style="padding-left: 0; margin-bottom: 1rem;">✓ Realiza una copia de seguridad de tus documentos importantes</li>
+                    <li style="padding-left: 0; margin-bottom: 1rem;">✓ Crea un script simple en la terminal (Linux/Windows) para listar archivos</li>
+                </ul>
+            </div>
+
+            <div class="cards-grid" style="margin-top: 2rem;">
+                <div class="card challenge-card">
+                    <div class="card-icon">🏆</div>
+                    <h3>Desafío 1: Diagnóstico de Red</h3>
+                    <p>Usa comandos como <code>ipconfig</code> (Windows) o <code>ifconfig</code> (Linux) para identificar tu dirección IP, gateway y DNS. Documenta los resultados.</p>
+                </div>
+                <div class="card challenge-card">
+                    <div class="card-icon">🚀</div>
+                    <h3>Desafío 2: Script de Mantenimiento</h3>
+                    <p>Crea un script (batch o shell) que limpie archivos temporales y muestre el espacio libre en disco.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Recursos -->
+        <div id="recursos" class="section">
+            <div class="welcome-section">
+                <h2>📚 Recursos Adicionales</h2>
+                <p>Accede a manuales, guías y herramientas para profundizar en tu aprendizaje.</p>
+            </div>
+            
+            <ul class="resources-list">
+                <li>
+                    <a href="#" onclick="downloadResource('Manual de Sistemas Operativos'); return false;">📄 Manual de Sistemas Operativos (PDF)</a>
+                    <p>Guía completa sobre instalación, configuración y administración de Windows, Linux y macOS.</p>
+                </li>
+                <li>
+                    <a href="#" onclick="downloadResource('Guía de Redes Básicas'); return false;">📄 Guía de Redes Básicas (PDF)</a>
+                    <p>Fundamentos de redes, protocolos, direccionamiento IP y configuración de routers.</p>
+                </li>
+                <li>
+                    <a href="#" onclick="downloadResource('Manual de Soporte Técnico'); return false;">📄 Manual de Soporte Técnico (PDF)</a>
+                    <p>Procedimientos, metodologías y mejores prácticas para resolver problemas técnicos.</p>
+                </li>
+                <li>
+                    <a href="#" onclick="downloadResource('Videos Tutoriales'); return false;">🎥 Videos Tutoriales</a>
+                    <p>Colección de videos paso a paso sobre instalación de SO, configuración de red y diagnóstico.</p>
+                </li>
+                <li>
+                    <a href="#" onclick="downloadResource('Herramientas de Diagnóstico'); return false;">🔧 Herramientas de Diagnóstico</a>
+                    <p>Software recomendado para análisis de hardware, red y seguridad.</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Sección Foro -->
+        <div id="foro" class="section">
+            <div class="welcome-section">
+                <h2>💬 Foro de Discusión</h2>
+                <p>Comparte, pregunta y aprende en comunidad.</p>
+            </div>
+            
+            <div class="forum-post">
+                <h4>¿Cómo solucionar problemas de conexión Wi-Fi?</h4>
+                <div class="forum-meta">Publicado por: Estudiante123 - Hace 2 días</div>
+                <p>Hola compañeros, tengo problemas para conectarme a la red Wi-Fi de mi casa. ¿Alguien puede ayudarme con los pasos básicos de diagnóstico?</p>
+                <button class="btn-primary" onclick="replyForum('Wi-Fi')">Responder</button>
+            </div>
+
+            <div class="forum-post">
+                <h4>Diferencias entre Windows y Linux</h4>
+                <div class="forum-meta">Publicado por: TechStudent - Hace 5 días</div>
+                <p>Estoy investigando sobre sistemas operativos y me gustaría conocer sus experiencias. ¿Cuáles son las principales diferencias en uso diario?</p>
+                <button class="btn-primary" onclick="replyForum('Windows vs Linux')">Responder</button>
+            </div>
+
+            <div class="forum-post">
+                <h4>Consejos para mantenimiento preventivo</h4>
+                <div class="forum-meta">Publicado por: ProfesorTech - Hace 1 semana</div>
+                <p>Compartiendo algunos consejos importantes para el mantenimiento preventivo de computadores. ¿Qué otras prácticas recomiendan?</p>
+                <button class="btn-primary" onclick="replyForum('Mantenimiento')">Responder</button>
+            </div>
+
+            <button class="btn-primary" onclick="createNewTopic()">+ Crear Nuevo Tema</button>
+        </div>
+
+        <!-- Sección Chat MEJORADA -->
+        <div id="chat" class="section">
+            <div class="welcome-section">
+                <h2>🤖 Chat Educativo</h2>
+                <p>Obtén ayuda inmediata sobre los temas del curso.</p>
+            </div>
+            
+            <div class="chat-container">
+                <div class="chat-header">
+                    🤖 Asistente Virtual de Aprendizaje
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <!-- El historial se mantendrá gracias a localStorage -->
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Escribe tu pregunta aquí..." onkeypress="if(event.key==='Enter') sendMessage()" />
+                    <button class="btn-primary" onclick="sendMessage()">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p class="footer-highlight">Unidad Educativa San Francisco de Asís - Campus Edén</p>
+        <p>Desarrollado por: Naomi Díaz Navarrete y Fabrizzio Jiménez Jiménez</p>
+        <p>Tutor: Fulton Eduardo Vivas Caiza</p>
+        <p>&copy; 2025 Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        // Estado global
+        let quizAnswers = new Array(5).fill(null);
+        let chatHistory = [];
+
+        // === NAVEGACIÓN MEJORADA ===
+        function showSection(sectionId) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            // Mostrar la seleccionada
+            document.getElementById(sectionId).classList.add('active');
+
+            // Actualizar botones
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+
+            // Scroll suave
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Animar progreso en inicio
+            if (sectionId === 'inicio') {
+                setTimeout(() => {
+                    document.getElementById('progressBar').style.width = '100%';
+                }, 300);
+            }
+            
+            // Cargar historial del chat si entramos al chat
+            if (sectionId === 'chat') {
+                loadChatHistory();
+            }
+        }
+
+        // === QUIZ MEJORADO ===
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const question = this.closest('.quiz-question');
+                question.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                
+                const questionIndex = Array.from(document.querySelectorAll('.quiz-question')).indexOf(question);
+                quizAnswers[questionIndex] = this.dataset.correct === 'true';
+            });
+        });
+
+        function submitQuiz() {
+            if (quizAnswers.some(answer => answer === null)) {
+                alert('⚠️ Por favor responde todas las preguntas antes de enviar.');
+                return;
+            }
+
+            const correctAnswers = quizAnswers.filter(answer => answer).length;
+            const totalQuestions = quizAnswers.length;
+            const percentage = (correctAnswers / totalQuestions) * 100;
+            const resultDiv = document.getElementById('quizResult');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '';
+
+            if (percentage >= 80) {
+                resultDiv.style.background = '#e8f5e9';
+                resultDiv.style.color = '#2e7d32';
+                resultDiv.style.borderLeft = '5px solid #4caf50';
+                resultDiv.innerHTML = `
+                    <h3>¡Excelente trabajo! 🌟</h3>
+                    <p>Has obtenido ${correctAnswers} de ${totalQuestions} respuestas correctas (${Math.round(percentage)}%).</p>
+                    <p>¡Demuestras un dominio sólido de los conceptos!</p>
+                `;
+            } else if (percentage >= 60) {
+                resultDiv.style.background = '#fff8e1';
+                resultDiv.style.color = '#e65100';
+                resultDiv.style.borderLeft = '5px solid #ff9800';
+                resultDiv.innerHTML = `
+                    <h3>Buen intento! 👍</h3>
+                    <p>Has obtenido ${correctAnswers} de ${totalQuestions} respuestas correctas (${Math.round(percentage)}%).</p>
+                    <p>Repasa los temas donde tuviste dudas y vuelve a intentarlo.</p>
+                `;
+            } else {
+                resultDiv.style.background = '#ffebee';
+                resultDiv.style.color = '#c62828';
+                resultDiv.style.borderLeft = '5px solid #f44336';
+                resultDiv.innerHTML = `
+                    <h3>¡Sigue practicando! 📚</h3>
+                    <p>Has obtenido ${correctAnswers} de ${totalQuestions} respuestas correctas (${Math.round(percentage)}%).</p>
+                    <p>Te recomendamos revisar los contenidos fundamentales antes de volver a intentarlo.</p>
+                `;
+            }
+
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // === CHAT MEJORADO CON HISTORIAL ===
+        function loadChatHistory() {
+            const saved = localStorage.getItem('chatHistory');
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = '';
+            
+            if (saved) {
+                chatHistory = JSON.parse(saved);
+                chatHistory.forEach(msg => {
+                    addMessageToUI(msg.text, msg.sender);
+                });
+            } else {
+                // Mensaje de bienvenida inicial
+                const welcomeMsg = "¡Hola! 👋 Soy tu asistente virtual. Puedo ayudarte con dudas sobre Sistemas Operativos, Redes y Soporte Técnico. ¿Sobre qué tema necesitas ayuda hoy?";
+                addMessageToUI(welcomeMsg, 'bot');
+                chatHistory.push({ text: welcomeMsg, sender: 'bot' });
+                saveChatHistory();
+            }
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function addMessageToUI(text, sender) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = `<strong>${sender === 'user' ? 'Tú:' : 'Asistente:'}</strong> ${text}`;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function addTypingIndicator() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        function saveChatHistory() {
+            localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const userMessage = input.value.trim();
+
+            if (userMessage === '') {
+                alert('⚠️ Por favor escribe un mensaje antes de enviar.');
+                return;
+            }
+
+            // Agregar mensaje del usuario
+            addMessageToUI(userMessage, 'user');
+            chatHistory.push({ text: userMessage, sender: 'user' });
+            input.value = '';
+            saveChatHistory();
+
+            // Mostrar indicador de "escribiendo"
+            addTypingIndicator();
+
+            // Simular tiempo de respuesta
+            setTimeout(() => {
+                removeTypingIndicator();
+                const botResponse = getBotResponse(userMessage.toLowerCase());
+                addMessageToUI(botResponse, 'bot');
+                chatHistory.push({ text: botResponse, sender: 'bot' });
+                saveChatHistory();
+            }, 1500);
+        }
+
+        // Base de conocimiento ampliada
+        const knowledgeBase = [
+            { keywords: ['hola', 'saludos', 'buenos'], response: '¡Hola! 👋 ¿Sobre qué tema de tecnología necesitas ayuda hoy?' },
+            { keywords: ['gracias', 'muchas gracias'], response: '¡De nada! 😊 Estoy aquí para ayudarte. Si tienes más preguntas, no dudes en consultarme.' },
+            { keywords: ['adios', 'chao', 'hasta luego'], response: '¡Hasta pronto! 👋 Sigue estudiando y practicando. ¡Éxitos en tu aprendizaje!' },
+            { keywords: ['sistema operativo', 'so', 's.o.'], response: 'Un sistema operativo gestiona el hardware y software. Ejemplos: Windows, Linux, macOS. ¿Quieres saber sobre funciones, tipos o componentes?' },
+            { keywords: ['windows'], response: 'Windows es el SO más usado en PCs. Desarrollado por Microsoft, ofrece interfaz gráfica intuitiva y gran compatibilidad con software y hardware.' },
+            { keywords: ['linux'], response: 'Linux es un sistema operativo de código abierto, muy seguro y estable. Ideal para servidores, programación y uso avanzado. Distribuciones populares: Ubuntu, Fedora, Debian.' },
+            { keywords: ['macos'], response: 'macOS es el sistema operativo de Apple, conocido por su estabilidad, seguridad y diseño elegante. Está basado en Unix y está optimizado para hardware Apple.' },
+            { keywords: ['red', 'redes', 'conexión'], response: 'Una red conecta dispositivos para compartir recursos. Tipos: LAN (local), WAN (amplia), Internet (global). ¿Te interesa saber sobre protocolos, dispositivos o configuración?' },
+            { keywords: ['router'], response: 'Un router conecta redes diferentes (como tu casa con Internet). Asigna direcciones IP a tus dispositivos y gestiona el tráfico de datos.' },
+            { keywords: ['switch'], response: 'Un switch conecta múltiples dispositivos dentro de una red local (LAN), permitiendo comunicación eficiente entre ellos.' },
+            { keywords: ['ip', 'dirección ip', 'ipv4', 'ipv6'], response: 'Una dirección IP identifica a cada dispositivo en una red. IPv4 (ej. 192.168.1.1) y IPv6 (más larga) son las versiones actuales. ¿Quieres aprender sobre máscaras de subred o DHCP?' },
+            { keywords: ['soporte técnico', 'soporte'], response: 'El soporte técnico ayuda a resolver problemas de hardware, software y redes. Incluye diagnóstico, instalación, mantenimiento y capacitación.' },
+            { keywords: ['mantenimiento'], response: 'El mantenimiento incluye limpieza física, actualizaciones de software, eliminación de archivos temporales y revisiones periódicas para prevenir fallos.' },
+            { keywords: ['wifi', 'wi-fi', 'conexión wifi'], response: 'Para problemas de WiFi: reinicia el router, verifica la contraseña, acércate al router, o prueba en otro dispositivo. ¿Tu problema es de conexión o velocidad?' },
+            { keywords: ['antivirus', 'virus', 'malware'], response: 'Un antivirus protege contra malware. Recomendados gratuitos: Windows Defender (ya incluido), Malwarebytes, Avast. Mantenlos actualizados.' },
+            { keywords: ['ping'], response: 'El comando "ping" prueba la conectividad con otro dispositivo en la red. Ej: ping google.com. Si ves "Respuesta desde...", la conexión funciona.' },
+            { keywords: ['dns'], response: 'DNS (Sistema de Nombres de Dominio) traduce nombres como google.com a direcciones IP (como 142.250.185.206) que entienden las computadoras.' },
+            { keywords: ['kernel'], response: 'El kernel es el núcleo del sistema operativo. Es la parte más fundamental que gestiona la CPU, memoria, dispositivos y recursos del sistema.' },
+            { keywords: ['shell'], response: 'La shell es la interfaz de línea de comandos que permite a los usuarios interactuar con el sistema operativo escribiendo comandos (ej: Terminal en Linux, CMD en Windows).' },
+            { keywords: ['backup', 'copia de seguridad'], response: 'Un backup es una copia de seguridad de tus archivos. ¡Esencial para proteger tus datos! Usa herramientas como File History (Windows) o Time Machine (macOS).' },
+            { keywords: ['default'], response: '¡Buena pregunta! Explora las secciones de Sistemas Operativos, Redes o Soporte Técnico para más información. ¿Puedo ayudarte con algo más específico?' }
+        ];
+
+        function getBotResponse(message) {
+            // Buscar coincidencias
+            for (let item of knowledgeBase) {
+                for (let keyword of item.keywords) {
+                    if (message.includes(keyword)) {
+                        return item.response;
+                    }
+                }
+            }
+
+            // Respuesta genérica
+            return 'Lo siento, no entendí tu pregunta. ¿Podrías reformularla o preguntar sobre Sistemas Operativos, Redes o Soporte Técnico? 😊';
+        }
+
+        // === FUNCIONES DE FORO Y RECURSOS ===
+        function downloadResource(resourceName) {
+            alert(`📥 Descargando: "${resourceName}"\n\nEste recurso está disponible para los estudiantes de la Unidad Educativa San Francisco de Asís.` +
+                  `\n\n*(En una versión con backend, aquí se descargaría el archivo PDF real)*`);
+        }
+
+        function replyForum(topic) {
+            const reply = prompt(`💬 Respondiendo al tema: "${topic}"\n\nEscribe tu respuesta:`);
+            if (reply && reply.trim() !== '') {
+                alert('✅ Tu respuesta ha sido publicada exitosamente en el foro.');
+            } else {
+                alert('❌ No se envió ninguna respuesta.');
+            }
+        }
+
+        function createNewTopic() {
+            const title = prompt('📌 Título del nuevo tema:');
+            if (!title || title.trim() === '') {
+                alert('❌ Debes ingresar un título para el tema.');
+                return;
+            }
+
+            const content = prompt('📝 Contenido de tu publicación:');
+            if (!content || content.trim() === '') {
+                alert('❌ Debes escribir algo en el contenido.');
+                return;
+            }
+
+            alert(`✅ Tu tema "${title}" ha sido creado exitosamente en el foro.`);
+        }
+
+        // === INICIALIZACIÓN ===
+        document.addEventListener('DOMContentLoaded', () => {
+            // Configurar eventos del quiz
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const question = this.closest('.quiz-question');
+                    question.querySelectorAll('.quiz-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    
+                    const questionIndex = Array.from(document.querySelectorAll('.quiz-question')).indexOf(question);
+                    quizAnswers[questionIndex] = this.dataset.correct === 'true';
+                });
+            });
+            
+            // Mostrar sección de inicio
+            document.querySelector('.nav-btn.active').click();
+        });
+    </script>
+</body>
+</html>
